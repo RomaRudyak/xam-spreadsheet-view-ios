@@ -1,6 +1,7 @@
 sharpie bind \
     SpreadsheetView/Framework/SpreadsheetView.xcodeproj \
-    -o SpreadsheetView-binding
+    -o SpreadsheetView-binding \
+    -n Spreadsheet
 
 cp -R \
     SpreadsheetView/Framework/sharpie-build/Build/Products/Release-iphoneos/SpreadsheetView.framework \
