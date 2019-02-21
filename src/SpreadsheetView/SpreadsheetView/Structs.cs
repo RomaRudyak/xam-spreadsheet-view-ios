@@ -1,5 +1,10 @@
 ﻿using System;
 
-namespace SpreadsheetView
+namespace Spreadsheet
 {
+    public struct Location
+    {
+        public nint Row;
+    }
+    
 }

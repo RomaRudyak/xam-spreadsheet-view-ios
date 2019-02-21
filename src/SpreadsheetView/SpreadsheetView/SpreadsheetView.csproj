@@ -6,7 +6,7 @@
     <ProjectGuid>{12F65E3D-572F-4F8D-BC14-DB89ED986B55}</ProjectGuid>
     <ProjectTypeGuids>{8FFB629D-F513-41CE-95D2-7ECE97B6EEEC};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>SpreadsheetView</RootNamespace>
+    <RootNamespace>Spreadsheet</RootNamespace>
     <AssemblyName>SpreadsheetView</AssemblyName>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
   </PropertyGroup>

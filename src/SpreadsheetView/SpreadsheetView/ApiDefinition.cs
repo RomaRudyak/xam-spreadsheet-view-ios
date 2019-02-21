@@ -7,7 +7,7 @@ using CoreGraphics;
 using CoreAnimation;
 
 
-namespace SpreadsheetView
+namespace Spreadsheet
 {
     //[Static]
     //[Verify(ConstantsInterfaceAssociation)]
@@ -23,6 +23,7 @@ namespace SpreadsheetView
     //}
 
     // @interface Cell : UIView
+    [Protocol]
     [BaseType(typeof(UIView))]
     interface Cell
     {
@@ -77,6 +78,7 @@ namespace SpreadsheetView
     }
 
     // @interface BlankCell : Cell
+    [Protocol]
     [BaseType(typeof(Cell))]
     interface BlankCell
     {
@@ -87,6 +89,7 @@ namespace SpreadsheetView
     }
 
     // @interface Border : UIView
+    [Protocol]
     [BaseType(typeof(UIView))]
     interface Border
     {
@@ -105,6 +108,7 @@ namespace SpreadsheetView
     }
 
     // @interface Gridline : CALayer
+    [Protocol]
     [BaseType(typeof(CALayer))]
     interface Gridline
     {
@@ -124,6 +128,7 @@ namespace SpreadsheetView
     }
 
     // @interface ScrollView : UIScrollView <UIGestureRecognizerDelegate>
+    [Protocol]
     [BaseType(typeof(UIScrollView))]
     interface ScrollView : IUIGestureRecognizerDelegate
     {
@@ -170,9 +175,13 @@ namespace SpreadsheetView
     }
 
     // @interface SpreadsheetView : UIView
+    [Protocol]
     [BaseType(typeof(UIView))]
     interface SpreadsheetView
     {
+        [Export("dataSource", ArgumentSemantic.Weak), NullAllowed]
+        ISpreadsheetViewDataSource DataSource { get; set; }
+
         // @property (nonatomic) CGSize intercellSpacing __attribute__((diagnose_if(0x7fe0d9230b90, "Swift property 'SpreadsheetView.intercellSpacing' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
         [Export("intercellSpacing", ArgumentSemantic.Assign)]
         CGSize IntercellSpacing { get; set; }
@@ -206,7 +215,8 @@ namespace SpreadsheetView
         UIView BackgroundView { get; set; }
 
         // -(void)safeAreaInsetsDidChange __attribute__((availability(ios, introduced=11.0)));
-        [iOS(11, 0)]
+        [Introduced(PlatformName.iOS, 11, 0)]
+        [Override]
         [Export("safeAreaInsetsDidChange")]
         void SafeAreaInsetsDidChange();
 
@@ -403,7 +413,7 @@ namespace SpreadsheetView
         void ScrollViewDidEndScrollingAnimation(UIScrollView scrollView);
 
         // -(void)scrollViewDidChangeAdjustedContentInset:(UIScrollView * _Nonnull)scrollView __attribute__((availability(ios, introduced=11.0)));
-        [iOS(11, 0)]
+        [Introduced(PlatformName.iOS, 11, 0)]
         [Export("scrollViewDidChangeAdjustedContentInset:")]
         void ScrollViewDidChangeAdjustedContentInset(UIScrollView scrollView);
     }
@@ -596,5 +606,50 @@ namespace SpreadsheetView
         [return: NullAllowed]
         NSObject ForwardingTargetForSelector(Selector aSelector);
     }
+
+
+    [Model]
+    [BaseType(typeof(NSObject))]
+    interface CellRange
+    {
+        [Export("contains:indexPath:")]
+        bool Contains(NSIndexPath indexPath);
+    }
+
+    [Protocol, Model]
+    [BaseType(typeof(NSObject))]
+    interface SpreadsheetViewDataSource
+    {
+        [Abstract]
+        [Export("numberOfColumns:")]
+        nint NumberOfColumns(SpreadsheetView spreadsheetView);
+
+        [Abstract]
+        [Export("numberOfRows:")]
+        nint NumberOfRows(SpreadsheetView spreadsheetView);
+
+        [Abstract]
+        [Export("spreadsheetView:widthForColumn:")]
+        nfloat WidthForColumn(SpreadsheetView spreadsheetView, nint column);
+
+        [Abstract]
+        [Export("spreadsheetView:heightForRow:")]
+        nfloat HeightForRow(SpreadsheetView spreadsheetView, nint row);
+
+        [Abstract]
+        [Export("mergedCells:")]
+        CellRange[] MergedCells(SpreadsheetView spreadsheetView);
+
+        [Abstract]
+        [Export("frozenColumns:")]
+        nint FrozenColumns(SpreadsheetView spreadsheetView);
+
+        [Abstract]
+        [Export("frozenRows:")]
+        nint FrozenRows(SpreadsheetView spreadsheetView);
+
+    }
+
+    interface ISpreadsheetViewDataSource { }
 
 }
