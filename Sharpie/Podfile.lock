@@ -1,0 +1,16 @@
+PODS:
+  - ZMJGanttChart (0.1.4)
+
+DEPENDENCIES:
+  - ZMJGanttChart
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - ZMJGanttChart
+
+SPEC CHECKSUMS:
+  ZMJGanttChart: 5e2c8c2e1431954e408b990b8a580e6d03affbf7
+
+PODFILE CHECKSUM: d30d923702e5e9982aac20bde648a6d35ac35231
+
+COCOAPODS: 1.6.0
