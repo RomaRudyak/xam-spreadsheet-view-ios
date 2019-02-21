@@ -5,7 +5,7 @@
 //
 using Foundation;
 
-namespace SpreadsheetView.Sample
+namespace Spreadsheet.Sample
 {
     [Register("ViewController")]
     partial class ViewController

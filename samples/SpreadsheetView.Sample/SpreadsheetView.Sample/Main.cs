@@ -1,6 +1,6 @@
 ﻿using UIKit;
 
-namespace SpreadsheetView.Sample
+namespace Spreadsheet.Sample
 {
     public class Application
     {
