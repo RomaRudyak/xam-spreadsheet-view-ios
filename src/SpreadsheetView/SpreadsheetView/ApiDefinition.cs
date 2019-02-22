@@ -1,511 +1,1520 @@
 ﻿using System;
-
-using UIKit;
+using CoreAnimation;
+using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
-using CoreGraphics;
-using CoreAnimation;
-
+using UIKit;
+using System.Collections.Generic;
 
 namespace Spreadsheet
 {
-    //[Static]
-    //[Verify(ConstantsInterfaceAssociation)]
-    //partial interface Constants
-    //{
-    //    // extern double SpreadsheetViewVersionNumber;
-    //    [Field("SpreadsheetViewVersionNumber", "__Internal")]
-    //    double SpreadsheetViewVersionNumber { get; }
+    // @interface Address : NSObject <NSCopying>
+    [BaseType(typeof(NSObject))]
+    interface Address : INSCopying
+    {
+        // @property (assign, nonatomic) NSInteger row;
+        [Export("row")]
+        nint Row { get; set; }
 
-    //    // extern const unsigned char [] SpreadsheetViewVersionString;
-    //    [Field("SpreadsheetViewVersionString", "__Internal")]
-    //    byte[] SpreadsheetViewVersionString { get; }
+        // @property (assign, nonatomic) NSInteger column;
+        [Export("column")]
+        nint Column { get; set; }
+
+        // @property (assign, nonatomic) NSInteger rowIndex;
+        [Export("rowIndex")]
+        nint RowIndex { get; set; }
+
+        // @property (assign, nonatomic) NSInteger columnIndex;
+        [Export("columnIndex")]
+        nint ColumnIndex { get; set; }
+
+        // -(instancetype)initWithRow:(NSInteger)row column:(NSInteger)column rowIndex:(NSInteger)rowIndex columnIndex:(NSInteger)columnIndex;
+        [Export("initWithRow:column:rowIndex:columnIndex:")]
+        IntPtr Constructor(nint row, nint column, nint rowIndex, nint columnIndex);
+
+        // +(instancetype)addressWithRow:(NSInteger)row column:(NSInteger)column rowIndex:(NSInteger)rowIndex columnIndex:(NSInteger)columnIndex;
+        [Static]
+        [Export("addressWithRow:column:rowIndex:columnIndex:")]
+        Address AddressWithRow(nint row, nint column, nint rowIndex, nint columnIndex);
+    }
+
+    // typedef void (^TouchHandler)(NSSet<UITouch *> *, UIEvent *);
+    delegate void TouchHandler(NSSet<UITouch> arg0, UIEvent arg1);
+
+    // @interface Borders : NSObject
+    [BaseType(typeof(NSObject))]
+    interface Borders
+    {
+        // @property (nonatomic, strong) BorderStyle * top;
+        [Export("top", ArgumentSemantic.Strong)]
+        BorderStyle Top { get; set; }
+
+        // @property (nonatomic, strong) BorderStyle * bottom;
+        [Export("bottom", ArgumentSemantic.Strong)]
+        BorderStyle Bottom { get; set; }
+
+        // @property (nonatomic, strong) BorderStyle * left;
+        [Export("left", ArgumentSemantic.Strong)]
+        BorderStyle Left { get; set; }
+
+        // @property (nonatomic, strong) BorderStyle * right;
+        [Export("right", ArgumentSemantic.Strong)]
+        BorderStyle Right { get; set; }
+
+        // -(instancetype)initWithTop:(BorderStyle *)top bottom:(BorderStyle *)bottom left:(BorderStyle *)left right:(BorderStyle *)right;
+        [Export("initWithTop:bottom:left:right:")]
+        IntPtr Constructor(BorderStyle top, BorderStyle bottom, BorderStyle left, BorderStyle right);
+
+        // +(instancetype)all:(BorderStyle *)style;
+        [Static]
+        [Export("all:")]
+        Borders All(BorderStyle style);
+    }
+
+    // @interface BorderStyle : NSObject
+    [BaseType(typeof(NSObject))]
+    interface BorderStyle
+    {
+        // @property (assign, nonatomic) CGFloat width;
+        [Export("width")]
+        nfloat Width { get; set; }
+
+        // @property (nonatomic, strong) UIColor * color;
+        [Export("color", ArgumentSemantic.Strong)]
+        UIColor Color { get; set; }
+
+        // @property (assign, nonatomic) BorderStyle_Enum border_enum;
+        [Export("border_enum", ArgumentSemantic.Assign)]
+        BorderStyleType Border_enum { get; set; }
+
+        // -(instancetype)initWithStyle:(BorderStyle_Enum)style_enum width:(CGFloat)widith color:(UIColor *)color;
+        [Export("initWithStyle:width:color:")]
+        IntPtr Constructor(BorderStyleType style_enum, nfloat widith, UIColor color);
+
+        // +(instancetype)borderStyleNone;
+        [Static]
+        [Export("borderStyleNone")]
+        BorderStyle BorderStyleNone();
+
+        // @property (assign, nonatomic) BOOL hasBorders;
+        [Export("hasBorders")]
+        bool HasBorders { get; set; }
+    }
+
+    //// @interface  (Borders)
+    //[Category]
+    //[BaseType(typeof(Borders))]
+    //interface BordersExtensions
+    //{
+    //    // @property (assign, nonatomic) BOOL hasBorders;
+    //    [Export("hasBorders")]
+    //    bool HasBorders { get; set; }
     //}
 
-    // @interface Cell : UIView
-    [Protocol]
+    // @interface Border : UIView
     [BaseType(typeof(UIView))]
-    interface Cell
+    interface Border : INativeObject
     {
-        // @property (readonly, nonatomic, strong) UIView * _Nonnull contentView __attribute__((diagnose_if(0x7fe0d922a240, "Swift property 'Cell.contentView' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (nonatomic, strong) Borders * borders;
+        [Export("borders", ArgumentSemantic.Strong)]
+        Borders Borders { get; set; }
+    }
+
+    // @protocol CircularScrollingConfiguration
+    [Protocol, Model]
+    [BaseType(typeof(NSObject))]
+    interface CircularScrollingConfiguration
+    {
+        // @required -(Options *)options;
+        [Abstract]
+        [Export("options")]
+        Options Options { get; }
+    }
+
+    // @interface CircularScrollingConfigurationBuilder : NSObject <CircularScrollingConfiguration>
+    [BaseType(typeof(NSObject))]
+    [DisableDefaultCtor]
+    interface CircularScrollingConfigurationBuilder : ICircularScrollingConfiguration
+    {
+        // -(instancetype)initWithCircularScrollingState:(CircularScrollingConfigurationState)state;
+        [Export("initWithCircularScrollingState:")]
+        IntPtr Constructor(CircularScrollingConfigurationState state);
+
+        // +(instancetype)configurationBuilderWithCircularScrollingState:(CircularScrollingConfigurationState)state;
+        [Static]
+        [Export("configurationBuilderWithCircularScrollingState:")]
+        CircularScrollingConfigurationBuilder ConfigurationBuilderWithCircularScrollingState(CircularScrollingConfigurationState state);
+
+        // @property (assign, nonatomic) CircularScrollingConfigurationState state;
+        [Export("state", ArgumentSemantic.Assign)]
+        CircularScrollingConfigurationState State { get; set; }
+    }
+
+    interface ICircularScrollingConfiguration { }
+
+    // @interface Configuration : NSObject
+    [BaseType(typeof(NSObject))]
+    [DisableDefaultCtor]
+    interface Configuration
+    {
+        // +(instancetype)instance;
+        [Static]
+        [Export("instance")]
+        Configuration Instance();
+
+        // @property (nonatomic, strong) CircularScrollingConfigurationBuilder * none;
+        [Export("none", ArgumentSemantic.Strong)]
+        CircularScrollingConfigurationBuilder None { get; set; }
+
+        // @property (nonatomic, strong) CircularScrollingConfigurationBuilder * horizontally;
+        [Export("horizontally", ArgumentSemantic.Strong)]
+        CircularScrollingConfigurationBuilder Horizontally { get; set; }
+
+        // @property (nonatomic, strong) CircularScrollingConfigurationBuilder * vertically;
+        [Export("vertically", ArgumentSemantic.Strong)]
+        CircularScrollingConfigurationBuilder Vertically { get; set; }
+
+        // @property (nonatomic, strong) CircularScrollingConfigurationBuilder * both;
+        [Export("both", ArgumentSemantic.Strong)]
+        CircularScrollingConfigurationBuilder Both { get; set; }
+    }
+
+    // @interface Options : NSObject
+    [BaseType(typeof(NSObject))]
+    [DisableDefaultCtor]
+    interface Options
+    {
+        // -(instancetype)initWithDirection:(ZMJDirection)direction headerStyle:(ZMJHeaderStyle)headerStyle tableStyle:(ZMJTableStyle)tableStyle;
+        [Export("initWithDirection:headerStyle:tableStyle:")]
+        IntPtr Constructor(ZMJDirection direction, ZMJHeaderStyle headerStyle, ZMJTableStyle tableStyle);
+
+        // +(instancetype)optionsWithDirection:(ZMJDirection)direction headerStyle:(ZMJHeaderStyle)headerStyle tableStyle:(ZMJTableStyle)tableStyle;
+        [Static]
+        [Export("optionsWithDirection:headerStyle:tableStyle:")]
+        Options OptionsWithDirection(ZMJDirection direction, ZMJHeaderStyle headerStyle, ZMJTableStyle tableStyle);
+
+        // @property (assign, nonatomic) ZMJDirection direction;
+        [Export("direction", ArgumentSemantic.Assign)]
+        ZMJDirection Direction { get; set; }
+
+        // @property (assign, nonatomic) ZMJHeaderStyle headerStyle;
+        [Export("headerStyle", ArgumentSemantic.Assign)]
+        ZMJHeaderStyle HeaderStyle { get; set; }
+
+        // @property (assign, nonatomic) ZMJTableStyle tableStyle;
+        [Export("tableStyle", ArgumentSemantic.Assign)]
+        ZMJTableStyle TableStyle { get; set; }
+    }
+
+    // @interface CircualrScrolling : NSObject
+    [BaseType(typeof(NSObject))]
+    interface CircualrScrolling
+    {
+    }
+
+    // @interface Gridlines : NSObject
+    [BaseType(typeof(NSObject))]
+    interface Gridlines
+    {
+        // @property (nonatomic, strong) GridStyle * top;
+        [Export("top", ArgumentSemantic.Strong)]
+        GridStyle Top { get; set; }
+
+        // @property (nonatomic, strong) GridStyle * bottom;
+        [Export("bottom", ArgumentSemantic.Strong)]
+        GridStyle Bottom { get; set; }
+
+        // @property (nonatomic, strong) GridStyle * left;
+        [Export("left", ArgumentSemantic.Strong)]
+        GridStyle Left { get; set; }
+
+        // @property (nonatomic, strong) GridStyle * right;
+        [Export("right", ArgumentSemantic.Strong)]
+        GridStyle Right { get; set; }
+
+        // -(instancetype)initWithTop:(GridStyle *)top bottom:(GridStyle *)bottom left:(GridStyle *)left right:(GridStyle *)right;
+        [Export("initWithTop:bottom:left:right:")]
+        IntPtr Constructor(GridStyle top, GridStyle bottom, GridStyle left, GridStyle right);
+
+        // +(instancetype)all:(GridStyle *)style;
+        [Static]
+        [Export("all:")]
+        Gridlines All(GridStyle style);
+    }
+
+    // @interface GridStyle : NSObject
+    [BaseType(typeof(NSObject))]
+    interface GridStyle
+    {
+        // @property (assign, nonatomic) GridStyle_Enum styleEnum;
+        [Export("styleEnum", ArgumentSemantic.Assign)]
+        GridStyleType StyleEnum { get; set; }
+
+        // @property (assign, nonatomic) CGFloat width;
+        [Export("width")]
+        nfloat Width { get; set; }
+
+        // @property (nonatomic, strong) UIColor * color;
+        [Export("color", ArgumentSemantic.Strong)]
+        UIColor Color { get; set; }
+
+        // -(instancetype)initWithStyle:(GridStyle_Enum)style_enum width:(CGFloat)widith color:(UIColor *)color;
+        [Export("initWithStyle:width:color:")]
+        IntPtr Constructor(GridStyleType style_enum, nfloat widith, UIColor color);
+
+        // +(instancetype)borderStyleNone;
+        [Static]
+        [Export("borderStyleNone")]
+        GridStyle BorderStyleNone();
+
+        // +(instancetype)style:(GridStyle_Enum)style_enum width:(CGFloat)widith color:(UIColor *)color;
+        [Static]
+        [Export("style:width:color:")]
+        GridStyle Style(GridStyleType style_enum, nfloat widith, UIColor color);
+    }
+
+    // @interface ZMJGridLayout : NSObject <NSCopying>
+    [BaseType(typeof(NSObject))]
+    interface ZMJGridLayout : INSCopying
+    {
+        // @property (assign, nonatomic) CGFloat gridWidth;
+        [Export("gridWidth")]
+        nfloat GridWidth { get; set; }
+
+        // @property (copy, nonatomic) UIColor * gridColor;
+        [Export("gridColor", ArgumentSemantic.Copy)]
+        UIColor GridColor { get; set; }
+
+        // @property (assign, nonatomic) CGPoint origin;
+        [Export("origin", ArgumentSemantic.Assign)]
+        CGPoint Origin { get; set; }
+
+        // @property (assign, nonatomic) CGFloat length;
+        [Export("length")]
+        nfloat Length { get; set; }
+
+        // @property (assign, nonatomic) RectEdge edge;
+        [Export("edge", ArgumentSemantic.Assign)]
+        RectEdge Edge { get; set; }
+
+        // @property (assign, nonatomic) CGFloat priority;
+        [Export("priority")]
+        nfloat Priority { get; set; }
+
+        // -(instancetype)initWithGridWidth:(CGFloat)gridWidth gridColor:(UIColor *)gridColor origin:(CGPoint)origin length:(CGFloat)length edge:(RectEdge)edge priority:(CGFloat)priority;
+        [Export("initWithGridWidth:gridColor:origin:length:edge:priority:")]
+        IntPtr Constructor(nfloat gridWidth, UIColor gridColor, CGPoint origin, nfloat length, RectEdge edge, nfloat priority);
+
+        // +(instancetype)gridLayoutWithGridWidth:(CGFloat)gridWidth gridColor:(UIColor *)gridColor origin:(CGPoint)origin length:(CGFloat)length edge:(RectEdge)edge priority:(CGFloat)priority;
+        [Static]
+        [Export("gridLayoutWithGridWidth:gridColor:origin:length:edge:priority:")]
+        ZMJGridLayout GridLayoutWithGridWidth(nfloat gridWidth, UIColor gridColor, CGPoint origin, nfloat length, RectEdge edge, nfloat priority);
+    }
+
+    // @interface Gridline : CALayer
+    [BaseType(typeof(CALayer))]
+    interface Gridline : INativeObject
+    {
+        // @property (nonatomic, strong) UIColor * color;
+        [Export("color", ArgumentSemantic.Strong)]
+        UIColor Color { get; set; }
+    }
+
+    // @interface Location : NSObject <NSCopying>
+    [BaseType(typeof(NSObject))]
+    interface Location : INSCopying
+    {
+        // @property (assign, nonatomic) NSInteger row;
+        [Export("row")]
+        nint Row { get; set; }
+
+        // @property (assign, nonatomic) NSInteger column;
+        [Export("column")]
+        nint Column { get; set; }
+
+        // -(instancetype)initWithRow:(NSInteger)row column:(NSInteger)column;
+        [Export("initWithRow:column:")]
+        IntPtr Constructor(nint row, nint column);
+
+        // +(instancetype)locationWithRow:(NSInteger)row column:(NSInteger)column;
+        [Static]
+        [Export("locationWithRow:column:")]
+        Location LocationWithRow(nint row, nint column);
+
+        // +(instancetype)indexPath:(NSIndexPath *)indexPath;
+        [Static]
+        [Export("indexPath:")]
+        Location IndexPath(NSIndexPath indexPath);
+    }
+
+    // @interface BinarySearch (NSArray)
+    [Category]
+    [BaseType(typeof(NSArray))]
+    interface NSArray_BinarySearch
+    {
+        // -(NSInteger)insertionIndexOfObject:(ObjectType)element;
+        [Export("insertionIndexOfObject:")]
+        nint InsertionIndexOfObject(NSObject element);
+    }
+
+    // @interface WBGAddition (NSArray)
+    [Category]
+    [BaseType(typeof(NSArray))]
+    interface NSArray_WBGAddition
+    {
+        // -(NSArray * _Nonnull)wbg_map:(id  _Nullable (^ _Nonnull)(ObjectType _Nonnull))block __attribute__((warn_unused_result));
+        [Export("wbg_map:")]
+        NSObject[] Wbg_map(Func<NSObject, NSObject> block);
+
+        // -(NSArray * _Nonnull)wbg_mapWithIndex:(id  _Nullable (^ _Nonnull)(ObjectType _Nonnull, NSUInteger))block __attribute__((warn_unused_result));
+        [Export("wbg_mapWithIndex:")]
+        NSObject[] Wbg_mapWithIndex(Func<NSObject, nuint, NSObject> block);
+
+        // +(NSArray * _Nonnull)wbg_map:(NSArray<ObjectType> * _Nonnull)array inBlock:(id  _Nullable (^ _Nonnull)(ObjectType _Nonnull))block;
+        [Static]
+        [Export("wbg_map:inBlock:")]
+        NSObject[] Wbg_map(NSObject[] array, Func<NSObject, NSObject> block);
+
+        // +(NSArray * _Nonnull)wbg_mapWithIndex:(NSArray<ObjectType> * _Nonnull)array inBlock:(id  _Nullable (^ _Nonnull)(ObjectType _Nonnull, NSUInteger))block __attribute__((warn_unused_result));
+        [Static]
+        [Export("wbg_mapWithIndex:inBlock:")]
+        NSObject[] Wbg_mapWithIndex(NSObject[] array, Func<NSObject, nuint, NSObject> block);
+
+        // -(NSArray * _Nonnull)wbg_multiMap:(void (^ _Nonnull)(ObjectType _Nonnull, WBGMultiMapReturn _Nonnull))block __attribute__((warn_unused_result));
+        [Export("wbg_multiMap:")]
+        NSObject[] Wbg_multiMap(Action<NSObject, WBGMultiMapReturn> block);
+
+        // -(NSArray * _Nonnull)wbg_multiMapWithIndex:(void (^ _Nonnull)(ObjectType _Nonnull, WBGMultiMapReturn _Nonnull, NSUInteger))block __attribute__((warn_unused_result));
+        [Export("wbg_multiMapWithIndex:")]
+        NSObject[] Wbg_multiMapWithIndex(Action<NSObject, WBGMultiMapReturn, nuint> block);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_filter:(BOOL (^ _Nonnull)(ObjectType _Nonnull))block __attribute__((warn_unused_result));
+        [Export("wbg_filter:")]
+        NSObject[] Wbg_filter(Func<NSObject, bool> block);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_filterWithIndex:(BOOL (^ _Nonnull)(ObjectType _Nonnull, NSUInteger))block __attribute__((warn_unused_result));
+        [Export("wbg_filterWithIndex:")]
+        NSObject[] Wbg_filterWithIndex(Func<NSObject, nuint, bool> block);
+
+        // +(NSArray<ObjectType> * _Nonnull)wbg_filter:(NSArray<ObjectType> * _Nonnull)array inBlock:(BOOL (^ _Nonnull)(ObjectType _Nonnull))block __attribute__((warn_unused_result));
+        [Static]
+        [Export("wbg_filter:inBlock:")]
+        NSObject[] Wbg_filter(NSObject[] array, Func<NSObject, bool> block);
+
+        // +(NSArray<ObjectType> * _Nonnull)wbg_filterWithIndex:(NSArray<ObjectType> * _Nonnull)array inBlock:(BOOL (^ _Nonnull)(ObjectType _Nonnull, NSUInteger))block __attribute__((warn_unused_result));
+        [Static]
+        [Export("wbg_filterWithIndex:inBlock:")]
+        NSObject[] Wbg_filterWithIndex(NSObject[] array, Func<NSObject, nuint, bool> block);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_reject:(BOOL (^ _Nonnull)(ObjectType _Nonnull))block __attribute__((warn_unused_result));
+        [Export("wbg_reject:")]
+        NSObject[] Wbg_reject(Func<NSObject, bool> block);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_rejectWithIndex:(BOOL (^ _Nonnull)(ObjectType _Nonnull, NSUInteger))block __attribute__((warn_unused_result));
+        [Export("wbg_rejectWithIndex:")]
+        NSObject[] Wbg_rejectWithIndex(Func<NSObject, nuint, bool> block);
+
+        // +(NSArray<ObjectType> * _Nonnull)wbg_reject:(NSArray<ObjectType> * _Nonnull)array inBlock:(BOOL (^ _Nonnull)(ObjectType _Nonnull))block __attribute__((warn_unused_result));
+        [Static]
+        [Export("wbg_reject:inBlock:")]
+        NSObject[] Wbg_reject(NSObject[] array, Func<NSObject, bool> block);
+
+        // +(NSArray<ObjectType> * _Nonnull)wbg_rejectWithIndex:(NSArray<ObjectType> * _Nonnull)array inBlock:(BOOL (^ _Nonnull)(ObjectType _Nonnull, NSUInteger))block __attribute__((warn_unused_result));
+        [Static]
+        [Export("wbg_rejectWithIndex:inBlock:")]
+        NSObject[] Wbg_rejectWithIndex(NSObject[] array, Func<NSObject, nuint, bool> block);
+
+        // -(id _Nullable)wbg_reduce:(id _Nullable)first with:(id  _Nonnull (^ _Nullable)(id _Nullable, ObjectType _Nonnull))block __attribute__((warn_unused_result));
+        [Export("wbg_reduce:with:")]
+        [return: NullAllowed]
+        NSObject Wbg_reduce([NullAllowed] NSObject first, [NullAllowed] Func<NSObject, NSObject, NSObject> block);
+
+        // -(id _Nullable)wbg_reduce:(id  _Nonnull (^ _Nullable)(id _Nullable, ObjectType _Nonnull))block __attribute__((warn_unused_result));
+        [Export("wbg_reduce:")]
+        [return: NullAllowed]
+        NSObject Wbg_reduce([NullAllowed] Func<NSObject, NSObject, NSObject> block);
+
+        // -(id _Nullable)wbg_reduce:(id _Nullable)first withIndex:(id  _Nonnull (^ _Nullable)(id _Nullable, ObjectType _Nonnull, NSUInteger))block __attribute__((warn_unused_result));
+        [Export("wbg_reduce:withIndex:")]
+        [return: NullAllowed]
+        NSObject Wbg_reduce([NullAllowed] NSObject first, [NullAllowed] Func<NSObject, NSObject, nuint, NSObject> block);
+
+        // -(id _Nullable)wbg_reduceWithIndex:(id  _Nonnull (^ _Nullable)(id _Nullable, ObjectType _Nonnull, NSUInteger))block __attribute__((warn_unused_result));
+        [Export("wbg_reduceWithIndex:")]
+        [return: NullAllowed]
+        NSObject Wbg_reduceWithIndex([NullAllowed] Func<NSObject, NSObject, nuint, NSObject> block);
+
+        // -(CGFloat)wbg_reduceCGFloat:(CGFloat)first with:(CGFloat (^ _Nonnull)(CGFloat, ObjectType _Nonnull))block;
+        [Export("wbg_reduceCGFloat:with:")]
+        nfloat Wbg_reduceCGFloat(nfloat first, Func<nfloat, NSObject, nfloat> block);
+
+        // -(CGFloat)wbg_reduceDouble:(double)first with:(double (^ _Nonnull)(double, ObjectType _Nonnull))block;
+        [Export("wbg_reduceDouble:with:")]
+        nfloat Wbg_reduceDouble(double first, Func<double, NSObject, double> block);
+
+        // -(CGFloat)wbg_reduceNSInteger:(NSInteger)first with:(NSInteger (^ _Nonnull)(NSInteger, ObjectType _Nonnull))block;
+        [Export("wbg_reduceNSInteger:with:")]
+        nfloat Wbg_reduceNSInteger(nint first, Func<nint, NSObject, nint> block);
+
+        // -(void)wbg_apply:(void (^ _Nonnull)(ObjectType _Nonnull))block;
+        [Export("wbg_apply:")]
+        void Wbg_apply(Action<NSObject> block);
+
+        // -(ObjectType _Nonnull)wbg_queryFirst:(BOOL (^ _Nonnull)(ObjectType _Nonnull))block __attribute__((warn_unused_result));
+        [Export("wbg_queryFirst:")]
+        NSObject Wbg_queryFirst(Func<NSObject, bool> block);
+
+        // -(ObjectType _Nonnull)wbg_queryFirstWithIndex:(BOOL (^ _Nonnull)(ObjectType _Nonnull, NSUInteger))block __attribute__((warn_unused_result));
+        [Export("wbg_queryFirstWithIndex:")]
+        NSObject Wbg_queryFirstWithIndex(Func<NSObject, nuint, bool> block);
+
+        // -(NSUInteger)wbg_indexOf:(BOOL (^ _Nonnull)(ObjectType _Nonnull))block __attribute__((warn_unused_result));
+        [Export("wbg_indexOf:")]
+        nuint Wbg_indexOf(Func<NSObject, bool> block);
+
+        // -(ObjectType _Nonnull)wbg_queryLast:(BOOL (^ _Nonnull)(ObjectType _Nonnull))block __attribute__((warn_unused_result));
+        [Export("wbg_queryLast:")]
+        NSObject Wbg_queryLast(Func<NSObject, bool> block);
+
+        // -(ObjectType _Nonnull)wbg_queryLastWithIndex:(BOOL (^ _Nonnull)(ObjectType _Nonnull, NSUInteger))block __attribute__((warn_unused_result));
+        [Export("wbg_queryLastWithIndex:")]
+        NSObject Wbg_queryLastWithIndex(Func<NSObject, nuint, bool> block);
+
+        // -(BOOL)wbg_any:(BOOL (^ _Nonnull)(ObjectType _Nonnull))block __attribute__((warn_unused_result));
+        [Export("wbg_any:")]
+        bool Wbg_any(Func<NSObject, bool> block);
+
+        // -(BOOL)wbg_anyWithIndex:(BOOL (^ _Nonnull)(ObjectType _Nonnull, NSUInteger))block __attribute__((warn_unused_result));
+        [Export("wbg_anyWithIndex:")]
+        bool Wbg_anyWithIndex(Func<NSObject, nuint, bool> block);
+
+        // -(BOOL)wbg_all:(BOOL (^ _Nonnull)(ObjectType _Nonnull))block __attribute__((warn_unused_result));
+        [Export("wbg_all:")]
+        bool Wbg_all(Func<NSObject, bool> block);
+
+        // -(BOOL)wbg_allWithIndex:(BOOL (^ _Nonnull)(ObjectType _Nonnull, NSUInteger))block __attribute__((warn_unused_result));
+        [Export("wbg_allWithIndex:")]
+        bool Wbg_allWithIndex(Func<NSObject, nuint, bool> block);
+
+        // +(NSArray<ObjectType> * _Nonnull)wbg_forIn:(NSInteger)count block:(ObjectType  _Nullable (^ _Nonnull)(NSUInteger))block;
+        [Static]
+        [Export("wbg_forIn:block:")]
+        NSObject[] Wbg_forIn(nint count, Func<nuint, NSObject> block);
+
+        // +(NSArray<ObjectType> * _Nonnull)wbg_forInRange:(NSRange)range block:(ObjectType  _Nullable (^ _Nonnull)(NSUInteger))block __attribute__((warn_unused_result));
+        [Static]
+        [Export("wbg_forInRange:block:")]
+        NSObject[] Wbg_forInRange(NSRange range, Func<nuint, NSObject> block);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_arrayByRemovingDuplicate __attribute__((warn_unused_result));
+        [Export("wbg_arrayByRemovingDuplicate")]
+        NSObject[] Wbg_arrayByRemovingDuplicate();
+
+        // -(ObjectType _Nullable)wbg_safeObjectAtIndex:(NSInteger)index __attribute__((warn_unused_result));
+        [Export("wbg_safeObjectAtIndex:")]
+        [return: NullAllowed]
+        NSObject Wbg_safeObjectAtIndex(nint index);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_getObjectsWithRange:(NSRange)range __attribute__((warn_unused_result));
+        [Export("wbg_getObjectsWithRange:")]
+        NSObject[] Wbg_getObjectsWithRange(NSRange range);
+
+        // -(ObjectType _Nullable)wbg_safeObjectAtIndexNumber:(NSNumber * _Nonnull)indexNumber __attribute__((warn_unused_result));
+        [Export("wbg_safeObjectAtIndexNumber:")]
+        [return: NullAllowed]
+        NSObject Wbg_safeObjectAtIndexNumber(NSNumber indexNumber);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_arrayByRemovingObject:(ObjectType _Nonnull)object __attribute__((warn_unused_result));
+        [Export("wbg_arrayByRemovingObject:")]
+        NSObject[] Wbg_arrayByRemovingObject(NSObject @object);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_arrayByRemovingObjectsFromArray:(NSArray<ObjectType> * _Nonnull)array __attribute__((warn_unused_result));
+        [Export("wbg_arrayByRemovingObjectsFromArray:")]
+        NSObject[] Wbg_arrayByRemovingObjectsFromArray(NSObject[] array);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_arrayByPopFirst __attribute__((warn_unused_result));
+        [Export("wbg_arrayByPopFirst")]
+        NSObject[] Wbg_arrayByPopFirst();
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_arrayByPopLast __attribute__((warn_unused_result));
+        [Export("wbg_arrayByPopLast")]
+        NSObject[] Wbg_arrayByPopLast();
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_safeArrayByRemovingObjectAtIndex:(NSUInteger)index __attribute__((warn_unused_result));
+        [Export("wbg_safeArrayByRemovingObjectAtIndex:")]
+        NSObject[] Wbg_safeArrayByRemovingObjectAtIndex(nuint index);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_arrayByAddingObject:(ObjectType _Nonnull)anObject __attribute__((warn_unused_result));
+        [Export("wbg_arrayByAddingObject:")]
+        NSObject[] Wbg_arrayByAddingObject(NSObject anObject);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_arrayByReplacingObject:(ObjectType _Nonnull)object with:(ObjectType _Nonnull)newObject __attribute__((warn_unused_result));
+        [Export("wbg_arrayByReplacingObject:with:")]
+        NSObject[] Wbg_arrayByReplacingObject(NSObject @object, NSObject newObject);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_arrayByReplacingObjectAtIndex:(NSUInteger)idx with:(ObjectType _Nonnull)newObject __attribute__((warn_unused_result));
+        [Export("wbg_arrayByReplacingObjectAtIndex:with:")]
+        NSObject[] Wbg_arrayByReplacingObjectAtIndex(nuint idx, NSObject newObject);
+
+        // -(NSArray * _Nonnull)wbg_arrayByJoiningWithObject:(id _Nonnull)object copyObject:(BOOL)copyObject __attribute__((warn_unused_result));
+        [Export("wbg_arrayByJoiningWithObject:copyObject:")]
+        NSObject[] Wbg_arrayByJoiningWithObject(NSObject @object, bool copyObject);
+
+        // +(NSArray<ObjectType> * _Nonnull)wbg_arrayByMergingArray:(NSArray<ObjectType> * _Nonnull)oneArray withArray:(NSArray<ObjectType> * _Nonnull)anotherArray copyItems:(BOOL)copyItems removeDuplicate:(BOOL)removeDuplicate __attribute__((warn_unused_result));
+        [Static]
+        [Export("wbg_arrayByMergingArray:withArray:copyItems:removeDuplicate:")]
+        NSObject[] Wbg_arrayByMergingArray(NSObject[] oneArray, NSObject[] anotherArray, bool copyItems, bool removeDuplicate);
+
+        // +(NSArray<ObjectType> * _Nonnull)wbg_arrayByMerging:(NSArray<ObjectType> * _Nonnull)oneArray, ... __attribute__((warn_unused_result)) __attribute__((sentinel(0, 1)));
+        [Static, Internal]
+        [Export("wbg_arrayByMerging:", IsVariadic = true)]
+        NSObject[] Wbg_arrayByMergingFor(NSObject[] oneArray, IntPtr varArgs);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_arrayByMerging:(NSArray<ObjectType> * _Nonnull)oneArray, ... __attribute__((warn_unused_result)) __attribute__((sentinel(0, 1)));
+        [Internal]
+        [Export("wbg_arrayByMerging:", IsVariadic = true)]
+        NSObject[] Wbg_arrayByMerging(NSObject[] oneArray, IntPtr varArgs);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_arrayByIntersectingWithArray:(NSArray<ObjectType> * _Nonnull)otherArray;
+        [Export("wbg_arrayByIntersectingWithArray:")]
+        NSObject[] Wbg_arrayByIntersectingWithArray(NSObject[] otherArray);
+
+        // -(NSArray * _Nonnull)wbg_arrayByPrependingObject:(id _Nonnull)object __attribute__((warn_unused_result));
+        [Export("wbg_arrayByPrependingObject:")]
+        NSObject[] Wbg_arrayByPrependingObject(NSObject @object);
+
+        // -(NSArray * _Nonnull)wbg_arrayByPrependingObjectsFromArray:(NSArray<id> * _Nonnull)array __attribute__((warn_unused_result));
+        [Export("wbg_arrayByPrependingObjectsFromArray:")]
+        NSObject[] Wbg_arrayByPrependingObjectsFromArray(NSObject[] array);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_arrayByReverse;
+        [Export("wbg_arrayByReverse")]
+        NSObject[] Wbg_arrayByReverse();
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_interSectWithArray:(NSArray<ObjectType> * _Nonnull)otherArray;
+        [Export("wbg_interSectWithArray:")]
+        NSObject[] Wbg_interSectWithArray(NSObject[] otherArray);
+
+        // -(NSArray<ObjectType> * _Nonnull)wbg_minuWithArray:(NSArray<ObjectType> * _Nonnull)otherArray;
+        [Export("wbg_minuWithArray:")]
+        NSObject[] Wbg_minuWithArray(NSObject[] otherArray);
+    }
+
+    // typedef void (^WBGMultiMapReturn)(id _Nullable);
+    delegate void WBGMultiMapReturn([NullAllowed] NSObject arg0);
+
+    // @interface WBGAdd (NSDictionary)
+    [Category]
+    [BaseType(typeof(NSDictionary))]
+    interface NSDictionary_WBGAdd
+    {
+        // -(NSDictionary * _Nullable)dictionaryValueForKey:(NSString * _Nonnull)key default:(NSDictionary * _Nullable)def;
+        [Export("dictionaryValueForKey:default:")]
+        [return: NullAllowed]
+        NSDictionary DictionaryValueForKey(string key, [NullAllowed] NSDictionary def);
+
+        // -(NSArray * _Nullable)arrayValueForKey:(NSString * _Nonnull)key default:(NSArray * _Nullable)def;
+        [Export("arrayValueForKey:default:")]
+        [return: NullAllowed]
+        NSObject[] ArrayValueForKey(string key, [NullAllowed] NSObject[] def);
+
+        // -(NSDate * _Nullable)dateValueForKey:(NSString * _Nonnull)key default:(NSDate * _Nullable)def;
+        [Export("dateValueForKey:default:")]
+        [return: NullAllowed]
+        NSDate DateValueForKey(string key, [NullAllowed] NSDate def);
+
+        // -(id _Nullable)blockValueForKey:(NSString * _Nonnull)key default:(id _Nullable)def;
+        [Export("blockValueForKey:default:")]
+        [return: NullAllowed]
+        NSObject BlockValueForKey(string key, [NullAllowed] NSObject def);
+
+        // -(ObjectType _Nullable)valueForKey:(NSString * _Nonnull)key ofKind:(Class _Nullable)kind default:(id _Nullable)def;
+        [Export("valueForKey:ofKind:default:")]
+        [return: NullAllowed]
+        NSObject ValueForKey(string key, [NullAllowed] Class kind, [NullAllowed] NSObject def);
+
+        // -(BOOL)boolValueForPath:(NSString * _Nonnull)path default:(BOOL)def;
+        [Export("boolValueForPath:default:")]
+        bool BoolValueForPath(string path, bool def);
+
+        // -(char)charValueForPath:(NSString * _Nonnull)path default:(char)def;
+        [Export("charValueForPath:default:")]
+        sbyte CharValueForPath(string path, sbyte def);
+
+        // -(unsigned char)unsignedCharValueForPath:(NSString * _Nonnull)path default:(unsigned char)def;
+        [Export("unsignedCharValueForPath:default:")]
+        byte UnsignedCharValueForPath(string path, byte def);
+
+        // -(short)shortValueForPath:(NSString * _Nonnull)path default:(short)def;
+        [Export("shortValueForPath:default:")]
+        short ShortValueForPath(string path, short def);
+
+        // -(unsigned short)unsignedShortValueForPath:(NSString * _Nonnull)path default:(unsigned short)def;
+        [Export("unsignedShortValueForPath:default:")]
+        ushort UnsignedShortValueForPath(string path, ushort def);
+
+        // -(int)intValueForPath:(NSString * _Nonnull)path default:(int)def;
+        [Export("intValueForPath:default:")]
+        int IntValueForPath(string path, int def);
+
+        // -(unsigned int)unsignedIntValueForPath:(NSString * _Nonnull)path default:(unsigned int)def;
+        [Export("unsignedIntValueForPath:default:")]
+        uint UnsignedIntValueForPath(string path, uint def);
+
+        // -(long)longValueForPath:(NSString * _Nonnull)path default:(long)def;
+        [Export("longValueForPath:default:")]
+        nint LongValueForPath(string path, nint def);
+
+        // -(unsigned long)unsignedLongValueForPath:(NSString * _Nonnull)path default:(unsigned long)def;
+        [Export("unsignedLongValueForPath:default:")]
+        nuint UnsignedLongValueForPath(string path, nuint def);
+
+        // -(long long)longLongValueForPath:(NSString * _Nonnull)path default:(long long)def;
+        [Export("longLongValueForPath:default:")]
+        long LongLongValueForPath(string path, long def);
+
+        // -(unsigned long long)unsignedLongLongValueForPath:(NSString * _Nonnull)path default:(unsigned long long)def;
+        [Export("unsignedLongLongValueForPath:default:")]
+        ulong UnsignedLongLongValueForPath(string path, ulong def);
+
+        // -(float)floatValueForPath:(NSString * _Nonnull)path default:(float)def;
+        [Export("floatValueForPath:default:")]
+        float FloatValueForPath(string path, float def);
+
+        // -(double)doubleValueForPath:(NSString * _Nonnull)path default:(double)def;
+        [Export("doubleValueForPath:default:")]
+        double DoubleValueForPath(string path, double def);
+
+        // -(NSInteger)integerValueForPath:(NSString * _Nonnull)path default:(NSInteger)def;
+        [Export("integerValueForPath:default:")]
+        nint IntegerValueForPath(string path, nint def);
+
+        // -(NSUInteger)unsignedIntegerValueForPath:(NSString * _Nonnull)path default:(NSUInteger)def;
+        [Export("unsignedIntegerValueForPath:default:")]
+        nuint UnsignedIntegerValueForPath(string path, nuint def);
+
+        // -(NSNumber * _Nullable)numberValueForPath:(NSString * _Nonnull)path default:(NSNumber * _Nullable)def;
+        [Export("numberValueForPath:default:")]
+        [return: NullAllowed]
+        NSNumber NumberValueForPath(string path, [NullAllowed] NSNumber def);
+
+        // -(NSString * _Nullable)stringValueForPath:(NSString * _Nonnull)path default:(NSString * _Nullable)def;
+        [Export("stringValueForPath:default:")]
+        [return: NullAllowed]
+        string StringValueForPath(string path, [NullAllowed] string def);
+
+        // -(NSDictionary * _Nullable)dictionaryValueForPath:(NSString * _Nonnull)path default:(NSDictionary * _Nullable)def;
+        [Export("dictionaryValueForPath:default:")]
+        [return: NullAllowed]
+        NSDictionary DictionaryValueForPath(string path, [NullAllowed] NSDictionary def);
+
+        // -(NSArray * _Nullable)arrayValueForPath:(NSString * _Nonnull)path default:(NSArray * _Nullable)def;
+        [Export("arrayValueForPath:default:")]
+        [return: NullAllowed]
+        NSObject[] ArrayValueForPath(string path, [NullAllowed] NSObject[] def);
+
+        // -(NSDate * _Nullable)dateValueForPath:(NSString * _Nonnull)path default:(NSDate * _Nullable)def;
+        [Export("dateValueForPath:default:")]
+        [return: NullAllowed]
+        NSDate DateValueForPath(string path, [NullAllowed] NSDate def);
+
+        // -(id _Nullable)blockValueForPath:(NSString * _Nonnull)path default:(id _Nullable)def;
+        [Export("blockValueForPath:default:")]
+        [return: NullAllowed]
+        NSObject BlockValueForPath(string path, [NullAllowed] NSObject def);
+
+        // -(NSDictionary * _Nonnull)dictionaryValueForPath:(NSString * _Nonnull)path;
+        [Export("dictionaryValueForPath:")]
+        NSDictionary DictionaryValueForPath(string path);
+
+        // -(NSArray * _Nonnull)arrayValueForPath:(NSString * _Nonnull)path;
+        [Export("arrayValueForPath:")]
+        NSObject[] ArrayValueForPath(string path);
+
+        // -(NSString * _Nonnull)stringValueForPath:(NSString * _Nonnull)path;
+        [Export("stringValueForPath:")]
+        string StringValueForPath(string path);
+
+        // -(NSDictionary * _Nonnull)dictionaryValueForKey:(NSString * _Nonnull)key;
+        [Export("dictionaryValueForKey:")]
+        NSDictionary DictionaryValueForKey(string key);
+
+        // -(NSArray * _Nonnull)arrayValueForKey:(NSString * _Nonnull)key;
+        [Export("arrayValueForKey:")]
+        NSObject[] ArrayValueForKey(string key);
+
+        // -(NSString * _Nonnull)stringValueForKey:(NSString * _Nonnull)key;
+        [Export("stringValueForKey:")]
+        string StringValueForKey(string key);
+
+        // -(NSDictionary * _Nonnull)wbg_map:(void (^ _Nonnull)(KeyType _Nonnull, ObjectType _Nonnull, WBGDictionaryReturnBlock _Nonnull))block __attribute__((warn_unused_result));
+        [Export("wbg_map:")]
+        NSDictionary Wbg_map(Action<NSObject, NSObject, WBGDictionaryReturnBlock> block);
+
+        // -(NSDictionary<KeyType,ObjectType> * _Nonnull)wbg_filter:(BOOL (^ _Nonnull)(KeyType _Nonnull, ObjectType _Nonnull))block __attribute__((warn_unused_result));
+        [Export("wbg_filter:")]
+        NSDictionary<NSObject, NSObject> Wbg_filter(Func<NSObject, NSObject, bool> block);
+
+        // +(NSDictionary<KeyType,ObjectType> * _Nonnull)wbg_forIn:(NSInteger)count block:(void (^ _Nonnull)(NSInteger, WBGDictionaryReturnBlock _Nonnull))block __attribute__((warn_unused_result));
+        [Static]
+        [Export("wbg_forIn:block:")]
+        NSDictionary<NSObject, NSObject> Wbg_forIn(nint count, Action<nint, WBGDictionaryReturnBlock> block);
+
+        // -(NSArray<id> * _Nonnull)wbg_toArray:(id  _Nonnull (^ _Nonnull)(KeyType _Nonnull, ObjectType _Nonnull))block __attribute__((warn_unused_result));
+        [Export("wbg_toArray:")]
+        NSObject[] Wbg_toArray(Func<NSObject, NSObject, NSObject> block);
+
+        // -(NSDictionary<KeyType,ObjectType> * _Nonnull)wbg_dictionaryBySettingObject:(ObjectType _Nonnull)anObject forKey:(KeyType<NSCopying> _Nonnull)aKey __attribute__((warn_unused_result));
+        [Export("wbg_dictionaryBySettingObject:forKey:")]
+        NSDictionary<NSObject, NSObject> Wbg_dictionaryBySettingObject(NSObject anObject, NSObject aKey);
+
+        // @property (readonly, nonatomic) NSDictionary<KeyType,ObjectType> * _Nonnull wbg_dictionaryByRemovingNSNull;
+        [Export("wbg_dictionaryByRemovingNSNull")]
+        NSDictionary<NSObject, NSObject> Wbg_dictionaryByRemovingNSNull();
+    }
+
+    // typedef void (^WBGDictionaryReturnBlock)(KeyType _Nonnull, ObjectType _Nonnull);
+    delegate void WBGDictionaryReturnBlock(NSObject arg0, NSObject arg1);
+
+    // @interface WBGAdd (NSMutableDictionary)
+    [Category]
+    [BaseType(typeof(NSMutableDictionary))]
+    interface NSMutableDictionary_WBGAdd
+    {
+        // -(void)setSafeObject:(ObjectType _Nonnull)anObject forKey:(KeyType _Nonnull)aKey;
+        [Export("setSafeObject:forKey:")]
+        void SetSafeObject(NSObject anObject, NSObject aKey);
+
+        // -(void)setSafeInteger:(NSInteger)integer forKey:(KeyType _Nonnull)aKey defaultValue:(NSInteger)defaultValue;
+        [Export("setSafeInteger:forKey:defaultValue:")]
+        void SetSafeInteger(nint integer, NSObject aKey, nint defaultValue);
+
+        // -(void)setSafeDate:(NSDate * _Nonnull)date forKey:(KeyType _Nonnull)aKey;
+        [Export("setSafeDate:forKey:")]
+        void SetSafeDate(NSDate date, NSObject aKey);
+
+        // -(void)setDouble:(double)aDouble precision:(NSUInteger)precision forKey:(KeyType _Nonnull)aKey;
+        [Export("setDouble:precision:forKey:")]
+        void SetDouble(double aDouble, nuint precision, NSObject aKey);
+    }
+
+    // @interface column (NSIndexPath)
+    [Category]
+    [BaseType(typeof(NSIndexPath))]
+    interface NSIndexPath_column
+    {
+        // @property (assign, nonatomic) NSInteger column;
+        [Export("column")]
+        nint GetColumn();
+
+        // +(instancetype)indexPathWithRow:(NSInteger)row column:(NSInteger)column;
+        [Static]
+        [Export("indexPathWithRow:column:")]
+        NSIndexPath IndexPathWithRow(nint row, nint column);
+    }
+
+    // audit-objc-generics: @interface ReuseQueue<__covariant Reusable> : NSObject
+    [BaseType(typeof(NSObject))]
+    interface ReuseQueue<T> : INativeObject where T : class, INativeObject
+    {
+        // -(void)enqueue:(Reusable)reusableObject;
+        [Export("enqueue:")]
+        void Enqueue(NSObject reusableObject);
+
+        // -(Reusable)dequeue;
+        [Export("dequeue")]
+        NSObject Dequeue();
+
+        // -(Reusable)dequeueOrCreate:(Class)clazz;
+        [Export("dequeueOrCreate:")]
+        NSObject DequeueOrCreate(Class clazz);
+    }
+
+    // audit-objc-generics: @interface ReusableCollection<__covariant Reusable> : NSObject <NSFastEnumeration>
+    [BaseType(typeof(NSObject))]
+    interface ReusableCollection<T> where T : INativeObject
+    {
+        // @property (readonly, nonatomic, strong) NSArray<Reusable> * array;
+        [Export("array", ArgumentSemantic.Strong)]
+        NSObject[] Array { get; }
+
+        // @property (readonly, nonatomic, strong) NSMutableDictionary<Address *,Reusable> * pairs;
+        [Export("pairs", ArgumentSemantic.Strong)]
+        NSMutableDictionary<Address, NSObject> Pairs { get; }
+
+        // @property (nonatomic, strong) NSMutableOrderedSet<Address *> * addresses;
+        [Export("addresses", ArgumentSemantic.Strong)]
+        NSMutableOrderedSet<Address> Addresses { get; set; }
+
+        // -(BOOL)contains:(Address *)member;
+        [Export("contains:")]
+        bool Contains(Address member);
+
+        // -(void)insert:(Address *)newMember;
+        [Export("insert:")]
+        void Insert(Address newMember);
+
+        // -(void)substract:(NSOrderedSet<Address *> *)other;
+        [Export("substract:")]
+        void Substract(NSOrderedSet<Address> other);
+
+        // -(Reusable)objectForKeyedSubscript:(Address *)key;
+        [Export("objectForKeyedSubscript:")]
+        NSObject ObjectForKeyedSubscript(Address key);
+
+        // -(void)removeObjectForKey:(Address *)aKey;
+        [Export("removeObjectForKey:")]
+        void RemoveObjectForKey(Address aKey);
+
+        // -(void)setObject:(Reusable)obj forKeyedSubscript:(Address *)key;
+        [Export("setObject:forKeyedSubscript:")]
+        void SetObject(NSObject obj, Address key);
+    }
+
+    // @protocol SpreadsheetViewDataSource <NSObject>
+    [Protocol, Model]
+    [BaseType(typeof(NSObject))]
+    interface SpreadsheetViewDataSource
+    {
+        // @required -(NSInteger)numberOfColumns:(SpreadsheetView *)spreadsheetView;
+        [Abstract]
+        [Export("numberOfColumns:")]
+        nint NumberOfColumns(SpreadsheetView spreadsheetView);
+
+        // @required -(NSInteger)numberOfRows:(SpreadsheetView *)spreadsheetView;
+        [Abstract]
+        [Export("numberOfRows:")]
+        nint NumberOfRows(SpreadsheetView spreadsheetView);
+
+        // @required -(CGFloat)spreadsheetView:(SpreadsheetView *)spreadsheetView widthForColumn:(NSInteger)column;
+        [Abstract]
+        [Export("spreadsheetView:widthForColumn:")]
+        nfloat WidthForColumn(SpreadsheetView spreadsheetView, nint column);
+
+        // @required -(CGFloat)spreadsheetView:(SpreadsheetView *)spreadsheetView heightForRow:(NSInteger)row;
+        [Abstract]
+        [Export("spreadsheetView:heightForRow:")]
+        nfloat HeightForRow(SpreadsheetView spreadsheetView, nint row);
+
+        // @required -(ZMJCell *)spreadsheetView:(SpreadsheetView *)spreadsheetView cellForItemAt:(NSIndexPath *)indexPath;
+        [Abstract]
+        [Export("spreadsheetView:cellForItemAt:")]
+        ZMJCell CellForItemAt(SpreadsheetView spreadsheetView, NSIndexPath indexPath);
+
+        // @optional -(NSArray<ZMJCellRange *> *)mergedCells:(SpreadsheetView *)spreadsheetView;
+        [Export("mergedCells:")]
+        ZMJCellRange[] MergedCells(SpreadsheetView spreadsheetView);
+
+        // @optional -(NSInteger)frozenColumns:(SpreadsheetView *)spreadsheetView;
+        [Export("frozenColumns:")]
+        nint FrozenColumns(SpreadsheetView spreadsheetView);
+
+        // @optional -(NSInteger)frozenRows:(SpreadsheetView *)spreadsheetView;
+        [Export("frozenRows:")]
+        nint FrozenRows(SpreadsheetView spreadsheetView);
+    }
+
+    interface ISpreadsheetViewDataSource { }
+
+    // @protocol SpreadsheetViewDelegate <NSObject>
+    [Protocol, Model]
+    [BaseType(typeof(NSObject))]
+    interface SpreadsheetViewDelegate
+    {
+        // @optional -(BOOL)spreadsheetView:(SpreadsheetView *)spreadsheetView shouldHighlightItemAt:(NSIndexPath *)indexPath;
+        [Export("spreadsheetView:shouldHighlightItemAt:")]
+        bool ShouldHighlightItemAt(SpreadsheetView spreadsheetView, NSIndexPath indexPath);
+
+        // @optional -(void)spreadsheetView:(SpreadsheetView *)spreadsheetView didHighlightItemAt:(NSIndexPath *)indexPath;
+        [Export("spreadsheetView:didHighlightItemAt:")]
+        void DidHighlightItemAt(SpreadsheetView spreadsheetView, NSIndexPath indexPath);
+
+        // @optional -(void)spreadsheetView:(SpreadsheetView *)spreadsheetView didUnhighlightItemAt:(NSIndexPath *)indexPath;
+        [Export("spreadsheetView:didUnhighlightItemAt:")]
+        void DidUnhighlightItemAt(SpreadsheetView spreadsheetView, NSIndexPath indexPath);
+
+        // @optional -(BOOL)spreadsheetView:(SpreadsheetView *)spreadsheetView shouldSelectItemAt:(NSIndexPath *)indexPath;
+        [Export("spreadsheetView:shouldSelectItemAt:")]
+        bool ShouldSelectItemAt(SpreadsheetView spreadsheetView, NSIndexPath indexPath);
+
+        // @optional -(BOOL)spreadsheetView:(SpreadsheetView *)spreadsheetView shouldDeselectItemAt:(NSIndexPath *)indexPath;
+        [Export("spreadsheetView:shouldDeselectItemAt:")]
+        bool ShouldDeselectItemAt(SpreadsheetView spreadsheetView, NSIndexPath indexPath);
+
+        // @optional -(void)spreadsheetView:(SpreadsheetView *)spreadsheetView didSelectItemAt:(NSIndexPath *)indexPath;
+        [Export("spreadsheetView:didSelectItemAt:")]
+        void DidSelectItemAt(SpreadsheetView spreadsheetView, NSIndexPath indexPath);
+
+        // @optional -(void)spreadsheetView:(SpreadsheetView *)spreadsheetView didDeselectItemAt:(NSIndexPath *)indexPath;
+        [Export("spreadsheetView:didDeselectItemAt:")]
+        void DidDeselectItemAt(SpreadsheetView spreadsheetView, NSIndexPath indexPath);
+    }
+
+    // @interface ZMJCell : UIView
+    [BaseType(typeof(UIView))]
+    interface ZMJCell : INativeObject
+    {
+        // @property (readonly, nonatomic, strong) UIView * contentView;
         [Export("contentView", ArgumentSemantic.Strong)]
         UIView ContentView { get; }
 
-        // @property (nonatomic, strong) UIView * _Nullable backgroundView __attribute__((diagnose_if(0x7fe0d922a4a8, "Swift property 'Cell.backgroundView' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [NullAllowed, Export("backgroundView", ArgumentSemantic.Strong)]
+        // @property (nonatomic, strong) UIView * backgroundView;
+        [Export("backgroundView", ArgumentSemantic.Strong)]
         UIView BackgroundView { get; set; }
 
-        // @property (nonatomic, strong) UIView * _Nullable selectedBackgroundView __attribute__((diagnose_if(0x7fe0d922a850, "Swift property 'Cell.selectedBackgroundView' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [NullAllowed, Export("selectedBackgroundView", ArgumentSemantic.Strong)]
+        // @property (nonatomic, strong) UIView * selectedBackgroundView;
+        [Export("selectedBackgroundView", ArgumentSemantic.Strong)]
         UIView SelectedBackgroundView { get; set; }
 
-        // @property (nonatomic) BOOL isHighlighted __attribute__((diagnose_if(0x7fe0d922abc8, "Swift property 'Cell.isHighlighted' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("isHighlighted")]
-        bool IsHighlighted { get; set; }
+        // @property (getter = isHighlighted, assign, nonatomic) BOOL highlighted;
+        [Export("highlighted")]
+        bool Highlighted { [Bind("isHighlighted")] get; set; }
 
-        // @property (nonatomic) BOOL isSelected __attribute__((diagnose_if(0x7fe0d922af18, "Swift property 'Cell.isSelected' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("isSelected")]
-        bool IsSelected { get; set; }
+        // @property (getter = isSelected, assign, nonatomic) BOOL selected;
+        [Export("selected")]
+        bool Selected { [Bind("isSelected")] get; set; }
 
-        // @property (nonatomic) BOOL hasBorder __attribute__((diagnose_if(0x7fe0d922b260, "Swift property 'Cell.hasBorder' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (nonatomic, strong) Gridlines * gridlines;
+        [Export("gridlines", ArgumentSemantic.Strong)]
+        Gridlines Gridlines { get; set; }
+
+        // @property (nonatomic, strong) Gridlines * grids;
+        [Export("grids", ArgumentSemantic.Strong)]
+        Gridlines Grids { get; set; }
+
+        // @property (nonatomic, strong) Borders * borders;
+        [Export("borders", ArgumentSemantic.Strong)]
+        Borders Borders { get; set; }
+
+        // @property (assign, nonatomic) BOOL hasBorder;
         [Export("hasBorder")]
         bool HasBorder { get; set; }
 
-        // @property (copy, nonatomic) NSString * _Nullable reuseIdentifier __attribute__((diagnose_if(0x7fe0d922b5a8, "Swift property 'Cell.reuseIdentifier' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [NullAllowed, Export("reuseIdentifier")]
+        // @property (copy, nonatomic) NSString * reuseIdentifier;
+        [Export("reuseIdentifier")]
         string ReuseIdentifier { get; set; }
 
-        // @property (copy, nonatomic) NSIndexPath * _Null_unspecified indexPath __attribute__((diagnose_if(0x7fe0d922b918, "Swift property 'Cell.indexPath' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("indexPath", ArgumentSemantic.Copy)]
+        // @property (nonatomic, strong) NSIndexPath * indexPath;
+        [Export("indexPath", ArgumentSemantic.Strong)]
         NSIndexPath IndexPath { get; set; }
 
-        // -(instancetype _Nonnull)initWithFrame:(CGRect)frame __attribute__((objc_designated_initializer));
-        [Export("initWithFrame:")]
-        [DesignatedInitializer]
-        IntPtr Constructor(CGRect frame);
+        // -(NSComparisonResult)compare:(ZMJCell *)aValue;
+        [Export("compare:")]
+        NSComparisonResult Compare(ZMJCell aValue);
 
-        // -(void)setup __attribute__((diagnose_if(0x7fe0d922c158, "Swift method 'Cell.setup()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("setup")]
-        void Setup();
+        // -(void)preppareForReuse;
+        [Export("preppareForReuse")]
+        void PreppareForReuse();
 
-        // -(void)prepareForReuse __attribute__((diagnose_if(0x7fe0d922c328, "Swift method 'Cell.prepareForReuse()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("prepareForReuse")]
-        void PrepareForReuse();
-
-        // -(void)setSelected:(BOOL)selected animated:(BOOL)animated __attribute__((diagnose_if(0x7fe0d922c500, "Swift method 'Cell.setSelected(_:animated:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // -(void)setSelected:(BOOL)selected animated:(BOOL)animated;
         [Export("setSelected:animated:")]
         void SetSelected(bool selected, bool animated);
     }
 
-    // @interface BlankCell : Cell
-    [Protocol]
-    [BaseType(typeof(Cell))]
+    // @interface BlankCell : ZMJCell
+    [BaseType(typeof(ZMJCell))]
     interface BlankCell
     {
-        // -(instancetype _Nonnull)initWithFrame:(CGRect)frame __attribute__((objc_designated_initializer));
-        [Export("initWithFrame:")]
-        [DesignatedInitializer]
-        IntPtr Constructor(CGRect frame);
     }
 
-    // @interface Border : UIView
-    [Protocol]
-    [BaseType(typeof(UIView))]
-    interface Border
-    {
-        // -(instancetype _Nonnull)initWithFrame:(CGRect)frame __attribute__((objc_designated_initializer));
-        [Export("initWithFrame:")]
-        [DesignatedInitializer]
-        IntPtr Constructor(CGRect frame);
-
-        // -(void)drawRect:(CGRect)rect;
-        [Export("drawRect:")]
-        void DrawRect(CGRect rect);
-
-        // -(void)layoutSubviews;
-        [Export("layoutSubviews")]
-        void LayoutSubviews();
-    }
-
-    // @interface Gridline : CALayer
-    [Protocol]
-    [BaseType(typeof(CALayer))]
-    interface Gridline
-    {
-        // @property (nonatomic, strong) UIColor * _Nonnull color __attribute__((diagnose_if(0x7fe0d922d148, "Swift property 'Gridline.color' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("color", ArgumentSemantic.Strong)]
-        UIColor Color { get; set; }
-
-        // -(instancetype _Nonnull)initWithLayer:(id _Nonnull)layer __attribute__((objc_designated_initializer));
-        [Export("initWithLayer:")]
-        [DesignatedInitializer]
-        IntPtr Constructor(NSObject layer);
-
-        // -(id<CAAction> _Nullable)actionForKey:(NSString * _Nonnull)event __attribute__((warn_unused_result));
-        [Export("actionForKey:")]
-        [return: NullAllowed]
-        CAAction ActionForKey(string @event);
-    }
-
-    // @interface ScrollView : UIScrollView <UIGestureRecognizerDelegate>
-    [Protocol]
+    // @interface ZMJScrollView : UIScrollView
     [BaseType(typeof(UIScrollView))]
-    interface ScrollView : IUIGestureRecognizerDelegate
+    interface ZMJScrollView
     {
-        // @property (copy, nonatomic) NSArray<NSNumber *> * _Nonnull columnRecords __attribute__((diagnose_if(0x7fe0d922dc90, "Swift property 'ScrollView.columnRecords' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("columnRecords", ArgumentSemantic.Copy)]
-        NSNumber[] ColumnRecords { get; set; }
+        // @property (nonatomic, strong) NSMutableArray<NSNumber *> * columnRecords;
+        [Export("columnRecords", ArgumentSemantic.Strong)]
+        NSMutableArray<NSNumber> ColumnRecords { get; set; }
 
-        // @property (copy, nonatomic) NSArray<NSNumber *> * _Nonnull rowRecords __attribute__((diagnose_if(0x7fe0d922e108, "Swift property 'ScrollView.rowRecords' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("rowRecords", ArgumentSemantic.Copy)]
-        NSNumber[] RowRecords { get; set; }
+        // @property (nonatomic, strong) NSMutableArray<NSNumber *> * rowRecords;
+        [Export("rowRecords", ArgumentSemantic.Strong)]
+        NSMutableArray<NSNumber> RowRecords { get; set; }
 
-        // @property (copy, nonatomic) void (^ _Nullable)(NSSet<UITouch *> * _Nonnull, UIEvent * _Nullable) touchesBegan __attribute__((diagnose_if(0x7fe0d922e4b0, "Swift property 'ScrollView.touchesBegan' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [NullAllowed, Export("touchesBegan", ArgumentSemantic.Copy)]
-        Action<NSSet<UITouch>, UIEvent> TouchesBegan { get; set; }
+        // @property (copy, nonatomic) TouchHandler touchesBegan;
+        [Export("touchesBegan", ArgumentSemantic.Copy)]
+        TouchHandler TouchesBegan { get; set; }
 
-        // @property (copy, nonatomic) void (^ _Nullable)(NSSet<UITouch *> * _Nonnull, UIEvent * _Nullable) touchesEnded __attribute__((diagnose_if(0x7fe0d922ec20, "Swift property 'ScrollView.touchesEnded' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [NullAllowed, Export("touchesEnded", ArgumentSemantic.Copy)]
-        Action<NSSet<UITouch>, UIEvent> TouchesEnded { get; set; }
+        // @property (copy, nonatomic) TouchHandler touchesEnded;
+        [Export("touchesEnded", ArgumentSemantic.Copy)]
+        TouchHandler TouchesEnded { get; set; }
 
-        // @property (copy, nonatomic) void (^ _Nullable)(NSSet<UITouch *> * _Nonnull, UIEvent * _Nullable) touchesCancelled __attribute__((diagnose_if(0x7fe0d922f120, "Swift property 'ScrollView.touchesCancelled' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [NullAllowed, Export("touchesCancelled", ArgumentSemantic.Copy)]
-        Action<NSSet<UITouch>, UIEvent> TouchesCancelled { get; set; }
+        // @property (copy, nonatomic) TouchHandler touchesCancelled;
+        [Export("touchesCancelled", ArgumentSemantic.Copy)]
+        TouchHandler TouchesCancelled { get; set; }
 
-        // @property (readonly, nonatomic) BOOL hasDisplayedContent __attribute__((diagnose_if(0x7fe0d922f628, "Swift property 'ScrollView.hasDisplayedContent' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (assign, nonatomic) LayoutAttributes layoutAttributes;
+        [Export("layoutAttributes", ArgumentSemantic.Assign)]
+        LayoutAttributes LayoutAttributes { get; set; }
+
+        // @property (assign, readwrite, nonatomic) State state;
+        [Export("state", ArgumentSemantic.Assign)]
+        State State { get; set; }
+
+        // @property (nonatomic, strong) ReusableCollection<ZMJCell *> * visibleCells;
+        [Export("visibleCells", ArgumentSemantic.Strong)]
+        ReusableCollection<ZMJCell> VisibleCells { get; set; }
+
+        // @property (nonatomic, strong) ReusableCollection<Gridline *> * visibleVerticalGridlines;
+        [Export("visibleVerticalGridlines", ArgumentSemantic.Strong)]
+        ReusableCollection<Gridline> VisibleVerticalGridlines { get; set; }
+
+        // @property (nonatomic, strong) ReusableCollection<Gridline *> * visibleHorizontalGridlines;
+        [Export("visibleHorizontalGridlines", ArgumentSemantic.Strong)]
+        ReusableCollection<Gridline> VisibleHorizontalGridlines { get; set; }
+
+        // @property (nonatomic, strong) ReusableCollection<Border *> * visibleBorders;
+        [Export("visibleBorders", ArgumentSemantic.Strong)]
+        ReusableCollection<Border> VisibleBorders { get; set; }
+
+        // @property (assign, nonatomic) BOOL hasDisplayedContent;
         [Export("hasDisplayedContent")]
-        bool HasDisplayedContent { get; }
+        bool HasDisplayedContent { get; set; }
 
-        // -(void)resetReusableObjects __attribute__((diagnose_if(0x7fe0d922f890, "Swift method 'ScrollView.resetReusableObjects()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // -(void)resetReusableObjects;
         [Export("resetReusableObjects")]
         void ResetReusableObjects();
+    }
 
-        // -(BOOL)gestureRecognizer:(UIGestureRecognizer * _Nonnull)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer * _Nonnull)otherGestureRecognizer __attribute__((warn_unused_result));
-        [Export("gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:")]
-        bool GestureRecognizer(UIGestureRecognizer gestureRecognizer, UIGestureRecognizer otherGestureRecognizer);
+    // @interface ZMJLayoutProperties : NSObject
+    [BaseType(typeof(NSObject))]
+    interface ZMJLayoutProperties
+    {
+        // @property (assign, nonatomic) NSInteger numberOfColumns;
+        [Export("numberOfColumns")]
+        nint NumberOfColumns { get; set; }
 
-        // -(BOOL)touchesShouldBegin:(NSSet<UITouch *> * _Nonnull)touches withEvent:(UIEvent * _Nullable)event inContentView:(UIView * _Nonnull)view __attribute__((warn_unused_result));
-        [Export("touchesShouldBegin:withEvent:inContentView:")]
-        bool TouchesShouldBegin(NSSet<UITouch> touches, [NullAllowed] UIEvent @event, UIView view);
+        // @property (assign, nonatomic) NSInteger numberOfRows;
+        [Export("numberOfRows")]
+        nint NumberOfRows { get; set; }
 
-        // -(instancetype _Nonnull)initWithFrame:(CGRect)frame __attribute__((objc_designated_initializer));
-        [Export("initWithFrame:")]
-        [DesignatedInitializer]
-        IntPtr Constructor(CGRect frame);
+        // @property (assign, nonatomic) NSInteger frozenColumns;
+        [Export("frozenColumns")]
+        nint FrozenColumns { get; set; }
+
+        // @property (assign, nonatomic) NSInteger frozenRows;
+        [Export("frozenRows")]
+        nint FrozenRows { get; set; }
+
+        // @property (assign, nonatomic) CGFloat frozenColumnWidth;
+        [Export("frozenColumnWidth")]
+        nfloat FrozenColumnWidth { get; set; }
+
+        // @property (assign, nonatomic) CGFloat frozenRowHeight;
+        [Export("frozenRowHeight")]
+        nfloat FrozenRowHeight { get; set; }
+
+        // @property (assign, nonatomic) CGFloat columnWidth;
+        [Export("columnWidth")]
+        nfloat ColumnWidth { get; set; }
+
+        // @property (assign, nonatomic) CGFloat rowHeight;
+        [Export("rowHeight")]
+        nfloat RowHeight { get; set; }
+
+        // @property (nonatomic, strong) NSMutableArray<NSNumber *> * columnWidthCache;
+        [Export("columnWidthCache", ArgumentSemantic.Strong)]
+        NSMutableArray<NSNumber> ColumnWidthCache { get; set; }
+
+        // @property (nonatomic, strong) NSMutableArray<NSNumber *> * rowHeightCache;
+        [Export("rowHeightCache", ArgumentSemantic.Strong)]
+        NSMutableArray<NSNumber> RowHeightCache { get; set; }
+
+        // @property (nonatomic, strong) NSMutableArray<ZMJCellRange *> * mergedCells;
+        [Export("mergedCells", ArgumentSemantic.Strong)]
+        NSMutableArray<ZMJCellRange> MergedCells { get; set; }
+
+        // @property (nonatomic, strong) NSMutableDictionary<Location *,ZMJCellRange *> * mergedCellLayouts;
+        [Export("mergedCellLayouts", ArgumentSemantic.Strong)]
+        NSMutableDictionary<Location, ZMJCellRange> MergedCellLayouts { get; set; }
+
+        // -(instancetype)initWithNumberOfColumns:(NSInteger)numberOfColumns numberOfRows:(NSInteger)numberOfRows frozenColumns:(NSInteger)frozenColumns frozenRows:(NSInteger)frozenRows frozenColumnWidth:(CGFloat)frozenColumnWidth frozenRowHeight:(CGFloat)frozenRowHeight columnWidth:(CGFloat)columnWidth rowHeight:(CGFloat)rowHeight columnWidthCache:(NSArray<NSNumber *> *)columnWidthCache rowHeightCache:(NSArray<NSNumber *> *)rowHeightCache mergedCells:(NSArray<ZMJCellRange *> *)mergedCells mergedCellLayouts:(NSDictionary<Location *,ZMJCellRange *> *)mergedCellLayouts;
+        [Export("initWithNumberOfColumns:numberOfRows:frozenColumns:frozenRows:frozenColumnWidth:frozenRowHeight:columnWidth:rowHeight:columnWidthCache:rowHeightCache:mergedCells:mergedCellLayouts:")]
+        IntPtr Constructor(nint numberOfColumns, nint numberOfRows, nint frozenColumns, nint frozenRows, nfloat frozenColumnWidth, nfloat frozenRowHeight, nfloat columnWidth, nfloat rowHeight, NSNumber[] columnWidthCache, NSNumber[] rowHeightCache, ZMJCellRange[] mergedCells, NSDictionary<Location, ZMJCellRange> mergedCellLayouts);
+    }
+
+    // @interface ZMJLayoutEngine : NSObject
+    [BaseType(typeof(NSObject))]
+    interface ZMJLayoutEngine
+    {
+        // -(instancetype)initWithSpreadsheetView:(SpreadsheetView *)spreadsheetView scrollView:(ZMJScrollView *)scrollView;
+        [Export("initWithSpreadsheetView:scrollView:")]
+        IntPtr Constructor(SpreadsheetView spreadsheetView, ZMJScrollView scrollView);
+
+        // +(instancetype)spreadsheetView:(SpreadsheetView *)spreadsheetView scrollView:(ZMJScrollView *)scrollView;
+        [Static]
+        [Export("spreadsheetView:scrollView:")]
+        ZMJLayoutEngine SpreadsheetView(SpreadsheetView spreadsheetView, ZMJScrollView scrollView);
+
+        // -(void)layout;
+        [Export("layout")]
+        void Layout();
     }
 
     // @interface SpreadsheetView : UIView
-    [Protocol]
     [BaseType(typeof(UIView))]
     interface SpreadsheetView
     {
-        [Export("dataSource", ArgumentSemantic.Weak), NullAllowed]
+        // @property (nonatomic, weak) id<SpreadsheetViewDataSource> dataSource;
+        [Export("dataSource", ArgumentSemantic.Weak)]
         ISpreadsheetViewDataSource DataSource { get; set; }
 
-        // @property (nonatomic) CGSize intercellSpacing __attribute__((diagnose_if(0x7fe0d9230b90, "Swift property 'SpreadsheetView.intercellSpacing' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        [Wrap("WeakDelegate")]
+        SpreadsheetViewDelegate Delegate { get; set; }
+
+        // @property (nonatomic, weak) id<SpreadsheetViewDelegate> delegate;
+        [NullAllowed, Export("delegate", ArgumentSemantic.Weak)]
+        NSObject WeakDelegate { get; set; }
+
+        // @property (assign, nonatomic) CGSize intercellSpacing;
         [Export("intercellSpacing", ArgumentSemantic.Assign)]
         CGSize IntercellSpacing { get; set; }
 
-        // @property (nonatomic) BOOL allowsSelection __attribute__((diagnose_if(0x7fe0d9230ee8, "Swift property 'SpreadsheetView.allowsSelection' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (nonatomic, strong) GridStyle * gridStyle;
+        [Export("gridStyle", ArgumentSemantic.Strong)]
+        GridStyle GridStyle { get; set; }
+
+        // @property (assign, nonatomic) BOOL allowsSelection;
         [Export("allowsSelection")]
         bool AllowsSelection { get; set; }
 
-        // @property (nonatomic) BOOL allowsMultipleSelection __attribute__((diagnose_if(0x7fe0d9231240, "Swift property 'SpreadsheetView.allowsMultipleSelection' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (assign, nonatomic) BOOL allowsMultipleSelection;
         [Export("allowsMultipleSelection")]
         bool AllowsMultipleSelection { get; set; }
 
-        // @property (nonatomic) BOOL showsVerticalScrollIndicator __attribute__((diagnose_if(0x7fe0d92315a0, "Swift property 'SpreadsheetView.showsVerticalScrollIndicator' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (assign, nonatomic) BOOL showsVerticalScrollIndicator;
         [Export("showsVerticalScrollIndicator")]
         bool ShowsVerticalScrollIndicator { get; set; }
 
-        // @property (nonatomic) BOOL showsHorizontalScrollIndicator __attribute__((diagnose_if(0x7fe0d9231908, "Swift property 'SpreadsheetView.showsHorizontalScrollIndicator' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (assign, nonatomic) BOOL showsHorizontalScrollIndicator;
         [Export("showsHorizontalScrollIndicator")]
         bool ShowsHorizontalScrollIndicator { get; set; }
 
-        // @property (nonatomic) BOOL scrollsToTop __attribute__((diagnose_if(0x7fe0d9231c70, "Swift property 'SpreadsheetView.scrollsToTop' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (assign, nonatomic) BOOL scrollsToTop;
         [Export("scrollsToTop")]
         bool ScrollsToTop { get; set; }
 
-        // @property (nonatomic) CGPoint centerOffset __attribute__((diagnose_if(0x7fe0d9231fc8, "Swift property 'SpreadsheetView.centerOffset' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (nonatomic, strong) id<CircularScrollingConfiguration> circularScrolling;
+        [Export("circularScrolling", ArgumentSemantic.Strong)]
+        CircularScrollingConfiguration CircularScrolling { get; set; }
+
+        // @property (nonatomic, strong) Options * circularScrollingOptions;
+        [Export("circularScrollingOptions", ArgumentSemantic.Strong)]
+        Options CircularScrollingOptions { get; set; }
+
+        // @property (assign, nonatomic) CircularScrollScalingFactor circularScrollScalingFactor;
+        [Export("circularScrollScalingFactor", ArgumentSemantic.Assign)]
+        CircularScrollScalingFactor CircularScrollScalingFactor { get; set; }
+
+        // @property (assign, nonatomic) CGPoint centerOffset;
         [Export("centerOffset", ArgumentSemantic.Assign)]
         CGPoint CenterOffset { get; set; }
 
-        // @property (nonatomic, strong) UIView * _Nullable backgroundView __attribute__((diagnose_if(0x7fe0d9232320, "Swift property 'SpreadsheetView.backgroundView' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [NullAllowed, Export("backgroundView", ArgumentSemantic.Strong)]
+        // @property (nonatomic, strong) UIView * backgroundView;
+        [Export("backgroundView", ArgumentSemantic.Strong)]
         UIView BackgroundView { get; set; }
 
-        // -(void)safeAreaInsetsDidChange __attribute__((availability(ios, introduced=11.0)));
-        [Introduced(PlatformName.iOS, 11, 0)]
-        [Override]
-        [Export("safeAreaInsetsDidChange")]
-        void SafeAreaInsetsDidChange();
+        // @property (readonly, nonatomic, strong) NSArray<ZMJCell *> * visibleCells;
+        [Export("visibleCells", ArgumentSemantic.Strong)]
+        ZMJCell[] VisibleCells { get; }
 
-        // @property (readonly, copy, nonatomic) NSArray<Cell *> * _Nonnull visibleCells __attribute__((diagnose_if(0x7fe0d92327e0, "Swift property 'SpreadsheetView.visibleCells' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("visibleCells", ArgumentSemantic.Copy)]
-        Cell[] VisibleCells { get; }
+        // @property (nonatomic, strong) NSArray<NSIndexPath *> * indexPathsForVisibleItems;
+        [Export("indexPathsForVisibleItems", ArgumentSemantic.Strong)]
+        NSIndexPath[] IndexPathsForVisibleItems { get; set; }
 
-        // @property (readonly, copy, nonatomic) NSArray<NSIndexPath *> * _Nonnull indexPathsForVisibleItems __attribute__((diagnose_if(0x7fe0d9232b68, "Swift property 'SpreadsheetView.indexPathsForVisibleItems' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("indexPathsForVisibleItems", ArgumentSemantic.Copy)]
-        NSIndexPath[] IndexPathsForVisibleItems { get; }
+        // @property (nonatomic, strong) NSIndexPath * indexPathForSelectedItem;
+        [Export("indexPathForSelectedItem", ArgumentSemantic.Strong)]
+        NSIndexPath IndexPathForSelectedItem { get; set; }
 
-        // @property (readonly, copy, nonatomic) NSIndexPath * _Nullable indexPathForSelectedItem __attribute__((diagnose_if(0x7fe0d9232ec8, "Swift property 'SpreadsheetView.indexPathForSelectedItem' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [NullAllowed, Export("indexPathForSelectedItem", ArgumentSemantic.Copy)]
-        NSIndexPath IndexPathForSelectedItem { get; }
+        // @property (nonatomic, strong) NSArray<NSIndexPath *> * indexPathsForSelectedItems;
+        [Export("indexPathsForSelectedItems", ArgumentSemantic.Strong)]
+        NSIndexPath[] IndexPathsForSelectedItems { get; set; }
 
-        // @property (readonly, copy, nonatomic) NSArray<NSIndexPath *> * _Nonnull indexPathsForSelectedItems __attribute__((diagnose_if(0x7fe0d9233180, "Swift property 'SpreadsheetView.indexPathsForSelectedItems' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("indexPathsForSelectedItems", ArgumentSemantic.Copy)]
-        NSIndexPath[] IndexPathsForSelectedItems { get; }
+        // @property (getter = isDirectionalLockEnabled, assign, nonatomic) BOOL directionalLockEnabled;
+        [Export("directionalLockEnabled")]
+        bool DirectionalLockEnabled { [Bind("isDirectionalLockEnabled")] get; set; }
 
-        // @property (nonatomic) BOOL isDirectionalLockEnabled __attribute__((diagnose_if(0x7fe0d9233440, "Swift property 'SpreadsheetView.isDirectionalLockEnabled' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("isDirectionalLockEnabled")]
-        bool IsDirectionalLockEnabled { get; set; }
-
-        // @property (nonatomic) BOOL bounces __attribute__((diagnose_if(0x7fe0d92337a0, "Swift property 'SpreadsheetView.bounces' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (assign, nonatomic) BOOL bounces;
         [Export("bounces")]
         bool Bounces { get; set; }
 
-        // @property (nonatomic) BOOL alwaysBounceVertical __attribute__((diagnose_if(0x7fe0d9233af0, "Swift property 'SpreadsheetView.alwaysBounceVertical' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (assign, nonatomic) BOOL alwaysBounceVertical;
         [Export("alwaysBounceVertical")]
         bool AlwaysBounceVertical { get; set; }
 
-        // @property (nonatomic) BOOL alwaysBounceHorizontal __attribute__((diagnose_if(0x7fe0d9233e50, "Swift property 'SpreadsheetView.alwaysBounceHorizontal' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (assign, nonatomic) BOOL alwaysBounceHorizontal;
         [Export("alwaysBounceHorizontal")]
         bool AlwaysBounceHorizontal { get; set; }
 
-        // @property (nonatomic) BOOL stickyRowHeader __attribute__((diagnose_if(0x7fe0d92341b0, "Swift property 'SpreadsheetView.stickyRowHeader' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (assign, nonatomic) BOOL stickyRowHeader;
         [Export("stickyRowHeader")]
         bool StickyRowHeader { get; set; }
 
-        // @property (nonatomic) BOOL stickyColumnHeader __attribute__((diagnose_if(0x7fe0d9234508, "Swift property 'SpreadsheetView.stickyColumnHeader' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (assign, nonatomic) BOOL stickyColumnHeader;
         [Export("stickyColumnHeader")]
         bool StickyColumnHeader { get; set; }
 
-        // @property (nonatomic) BOOL isPagingEnabled __attribute__((diagnose_if(0x7fe0d9234868, "Swift property 'SpreadsheetView.isPagingEnabled' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("isPagingEnabled")]
-        bool IsPagingEnabled { get; set; }
+        // @property (getter = isPagingEnabled, assign, nonatomic) BOOL pagingEnabled;
+        [Export("pagingEnabled")]
+        bool PagingEnabled { [Bind("isPagingEnabled")] get; set; }
 
-        // @property (nonatomic) BOOL isScrollEnabled __attribute__((diagnose_if(0x7fe0d9234bc0, "Swift property 'SpreadsheetView.isScrollEnabled' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("isScrollEnabled")]
-        bool IsScrollEnabled { get; set; }
+        // @property (getter = isScrollEnabled, assign, nonatomic) BOOL scrollEnabled;
+        [Export("scrollEnabled")]
+        bool ScrollEnabled { [Bind("isScrollEnabled")] get; set; }
 
-        // @property (nonatomic) UIScrollViewIndicatorStyle indicatorStyle __attribute__((diagnose_if(0x7fe0d9234f18, "Swift property 'SpreadsheetView.indicatorStyle' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (assign, nonatomic) UIScrollViewIndicatorStyle indicatorStyle;
         [Export("indicatorStyle", ArgumentSemantic.Assign)]
         UIScrollViewIndicatorStyle IndicatorStyle { get; set; }
 
-        // @property (nonatomic) CGFloat decelerationRate __attribute__((diagnose_if(0x7fe0d9235270, "Swift property 'SpreadsheetView.decelerationRate' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (assign, nonatomic) CGFloat decelerationRate;
         [Export("decelerationRate")]
         nfloat DecelerationRate { get; set; }
 
-        // @property (readonly, nonatomic) NSInteger numberOfColumns __attribute__((diagnose_if(0x7fe0d92355c8, "Swift property 'SpreadsheetView.numberOfColumns' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (readonly, assign, nonatomic) NSInteger numberOfColumns;
         [Export("numberOfColumns")]
         nint NumberOfColumns { get; }
 
-        // @property (readonly, nonatomic) NSInteger numberOfRows __attribute__((diagnose_if(0x7fe0d9235820, "Swift property 'SpreadsheetView.numberOfRows' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (readonly, assign, nonatomic) NSInteger numberOfRows;
         [Export("numberOfRows")]
         nint NumberOfRows { get; }
 
-        // @property (readonly, nonatomic) NSInteger frozenColumns __attribute__((diagnose_if(0x7fe0d9235a78, "Swift property 'SpreadsheetView.frozenColumns' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (readonly, assign, nonatomic) NSInteger frozenColumns;
         [Export("frozenColumns")]
         nint FrozenColumns { get; }
 
-        // @property (readonly, nonatomic) NSInteger frozenRows __attribute__((diagnose_if(0x7fe0d9235cd0, "Swift property 'SpreadsheetView.frozenRows' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // @property (readonly, assign, nonatomic) NSInteger frozenRows;
         [Export("frozenRows")]
         nint FrozenRows { get; }
 
-        // @property (readonly, nonatomic, strong) UIScrollView * _Nonnull scrollView __attribute__((diagnose_if(0x7fe0d9235f28, "Swift property 'SpreadsheetView.scrollView' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("scrollView", ArgumentSemantic.Strong)]
+        // @property (readonly, assign, nonatomic) NSArray<ZMJCellRange *> * mergedCells;
+        [Export("mergedCells", ArgumentSemantic.Assign)]
+        ZMJCellRange[] MergedCells { get; }
+
+        // @property (nonatomic, strong) NSString * blankCellReuseIdentifier;
+        [Export("blankCellReuseIdentifier", ArgumentSemantic.Strong)]
+        string BlankCellReuseIdentifier { get; set; }
+
+        // @property (readonly, assign, nonatomic) UIScrollView * scrollView;
+        [Export("scrollView", ArgumentSemantic.Assign)]
         UIScrollView ScrollView { get; }
 
-        // @property (readonly, nonatomic, strong) UIScrollView * _Nonnull rootView __attribute__((diagnose_if(0x7fe0d9236200, "Swift property 'SpreadsheetView.rootView' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("rootView", ArgumentSemantic.Strong)]
-        UIScrollView RootView { get; }
+        // @property (nonatomic, strong) ReuseQueue<Gridline *> * horizontalGridlineReuseQueue;
+        [Export("horizontalGridlineReuseQueue", ArgumentSemantic.Strong)]
+        ReuseQueue<Gridline> HorizontalGridlineReuseQueue { get; set; }
 
-        // @property (readonly, nonatomic, strong) UIScrollView * _Nonnull overlayView __attribute__((diagnose_if(0x7fe0d9236470, "Swift property 'SpreadsheetView.overlayView' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("overlayView", ArgumentSemantic.Strong)]
-        UIScrollView OverlayView { get; }
+        // @property (nonatomic, strong) ReuseQueue<Gridline *> * verticalGridlineReuseQueue;
+        [Export("verticalGridlineReuseQueue", ArgumentSemantic.Strong)]
+        ReuseQueue<Gridline> VerticalGridlineReuseQueue { get; set; }
 
-        // @property (readonly, nonatomic, strong) ScrollView * _Nonnull columnHeaderView __attribute__((diagnose_if(0x7fe0d92366e8, "Swift property 'SpreadsheetView.columnHeaderView' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("columnHeaderView", ArgumentSemantic.Strong)]
-        ScrollView ColumnHeaderView { get; }
+        // @property (nonatomic, strong) ReuseQueue<Border *> * borderReuseQueue;
+        [Export("borderReuseQueue", ArgumentSemantic.Strong)]
+        ReuseQueue<Border> BorderReuseQueue { get; set; }
 
-        // @property (readonly, nonatomic, strong) ScrollView * _Nonnull rowHeaderView __attribute__((diagnose_if(0x7fe0d92369c0, "Swift property 'SpreadsheetView.rowHeaderView' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("rowHeaderView", ArgumentSemantic.Strong)]
-        ScrollView RowHeaderView { get; }
+        // @property (nonatomic, strong) NSMutableDictionary<NSString *,ReuseQueue<ZMJCell *> *> * cellReuseQueues;
+        [Export("cellReuseQueues", ArgumentSemantic.Strong)]
+        NSMutableDictionary<NSString, ReuseQueue<ZMJCell>> CellReuseQueues { get; set; }
 
-        // @property (readonly, nonatomic, strong) ScrollView * _Nonnull cornerView __attribute__((diagnose_if(0x7fe0daeb40a0, "Swift property 'SpreadsheetView.cornerView' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("cornerView", ArgumentSemantic.Strong)]
-        ScrollView CornerView { get; }
-
-        // @property (readonly, nonatomic, strong) ScrollView * _Nonnull tableView __attribute__((diagnose_if(0x7fe0daeb4318, "Swift property 'SpreadsheetView.tableView' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("tableView", ArgumentSemantic.Strong)]
-        ScrollView TableView { get; }
-
-        // @property (readonly, copy, nonatomic) NSString * _Nonnull blankCellReuseIdentifier __attribute__((diagnose_if(0x7fe0daeb4590, "Swift property 'SpreadsheetView.blankCellReuseIdentifier' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("blankCellReuseIdentifier")]
-        string BlankCellReuseIdentifier { get; }
-
-        // @property (copy, nonatomic) NSSet<NSIndexPath *> * _Nonnull highlightedIndexPaths __attribute__((diagnose_if(0x7fe0daeb4810, "Swift property 'SpreadsheetView.highlightedIndexPaths' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("highlightedIndexPaths", ArgumentSemantic.Copy)]
-        NSSet<NSIndexPath> HighlightedIndexPaths { get; set; }
-
-        // @property (copy, nonatomic) NSSet<NSIndexPath *> * _Nonnull selectedIndexPaths __attribute__((diagnose_if(0x7fe0daeb4c68, "Swift property 'SpreadsheetView.selectedIndexPaths' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("selectedIndexPaths", ArgumentSemantic.Copy)]
-        NSSet<NSIndexPath> SelectedIndexPaths { get; set; }
-
-        // @property (copy, nonatomic) NSIndexPath * _Nullable pendingSelectionIndexPath __attribute__((diagnose_if(0x7fe0daeb5020, "Swift property 'SpreadsheetView.pendingSelectionIndexPath' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [NullAllowed, Export("pendingSelectionIndexPath", ArgumentSemantic.Copy)]
-        NSIndexPath PendingSelectionIndexPath { get; set; }
-
-        // @property (nonatomic, strong) UITouch * _Nullable currentTouch __attribute__((diagnose_if(0x7fe0daeb53a8, "Swift property 'SpreadsheetView.currentTouch' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [NullAllowed, Export("currentTouch", ArgumentSemantic.Strong)]
-        UITouch CurrentTouch { get; set; }
-
-        // -(instancetype _Nonnull)initWithFrame:(CGRect)frame __attribute__((objc_designated_initializer));
-        [Export("initWithFrame:")]
-        [DesignatedInitializer]
-        IntPtr Constructor(CGRect frame);
-
-        // -(void)registerClass:(Class _Nonnull)cellClass forCellWithReuseIdentifier:(NSString * _Nonnull)identifier;
+        // -(void)registerClass:(Class)cellClass forCellWithReuseIdentifier:(NSString *)identifier;
         [Export("registerClass:forCellWithReuseIdentifier:")]
         void RegisterClass(Class cellClass, string identifier);
 
-        // -(void)registerNib:(UINib * _Nonnull)nib forCellWithReuseIdentifier:(NSString * _Nonnull)identifier;
+        // -(void)registerNib:(UINib *)cellNib forCellWithReuseIdentifier:(NSString *)identifier;
         [Export("registerNib:forCellWithReuseIdentifier:")]
-        void RegisterNib(UINib nib, string identifier);
+        void RegisterNib(UINib cellNib, string identifier);
 
-        // -(void)reloadData __attribute__((diagnose_if(0x7fe0daeb5ea8, "Swift method 'SpreadsheetView.reloadData()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // -(void)reloadData;
         [Export("reloadData")]
         void ReloadData();
 
-        // -(void)reloadDataIfNeeded __attribute__((diagnose_if(0x7fe0daeb6088, "Swift method 'SpreadsheetView.reloadDataIfNeeded()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("reloadDataIfNeeded")]
-        void ReloadDataIfNeeded();
+        // -(ZMJCell *)dequeueReusableCellWithReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath;
+        [Export("dequeueReusableCellWithReuseIdentifier:forIndexPath:")]
+        ZMJCell DequeueReusableCellWithReuseIdentifier(string identifier, NSIndexPath indexPath);
 
-        // -(Cell * _Nonnull)dequeueReusableCellWithReuseIdentifier:(NSString * _Nonnull)identifier for:(NSIndexPath * _Nonnull)indexPath __attribute__((diagnose_if(0x7fe0daeb6270, "Swift method 'SpreadsheetView.dequeueReusableCell(withReuseIdentifier:for:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning"))) __attribute__((warn_unused_result));
-        [Export("dequeueReusableCellWithReuseIdentifier:for:")]
-        Cell DequeueReusableCellWithReuseIdentifier(string identifier, NSIndexPath indexPath);
+        // -(void)scrollToItemIndexPath:(NSIndexPath *)indexPath at:(ZMJScrollPosition)scrollPosition animated:(BOOL)animated;
+        [Export("scrollToItemIndexPath:at:animated:")]
+        void ScrollToItemIndexPath(NSIndexPath indexPath, ZMJScrollPosition scrollPosition, bool animated);
 
-        // -(void)deselectItemAt:(NSIndexPath * _Nonnull)indexPath animated:(BOOL)animated __attribute__((diagnose_if(0x7fe0daeb6640, "Swift method 'SpreadsheetView.deselectItem(at:animated:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("deselectItemAt:animated:")]
-        void DeselectItemAt(NSIndexPath indexPath, bool animated);
+        // -(void)selectItemIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated scrollPosition:(ZMJScrollPosition)scrollPosition;
+        [Export("selectItemIndexPath:animated:scrollPosition:")]
+        void SelectItemIndexPath(NSIndexPath indexPath, bool animated, ZMJScrollPosition scrollPosition);
 
-        // -(NSIndexPath * _Nullable)indexPathForItemAt:(CGPoint)point __attribute__((diagnose_if(0x7fe0daeb6940, "Swift method 'SpreadsheetView.indexPathForItem(at:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning"))) __attribute__((warn_unused_result));
+        // -(void)deselectItemIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated;
+        [Export("deselectItemIndexPath:animated:")]
+        void DeselectItemIndexPath(NSIndexPath indexPath, bool animated);
+
+        // -(NSIndexPath *)indexPathForItemAt:(CGPoint)point;
         [Export("indexPathForItemAt:")]
-        [return: NullAllowed]
         NSIndexPath IndexPathForItemAt(CGPoint point);
 
-        // -(Cell * _Nullable)cellForItemAt:(NSIndexPath * _Nonnull)indexPath __attribute__((diagnose_if(0x7fe0daeb6bd0, "Swift method 'SpreadsheetView.cellForItem(at:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning"))) __attribute__((warn_unused_result));
+        // -(ZMJCell *)cellForItemAt:(NSIndexPath *)indexPath;
         [Export("cellForItemAt:")]
-        [return: NullAllowed]
-        Cell CellForItemAt(NSIndexPath indexPath);
+        ZMJCell CellForItemAt(NSIndexPath indexPath);
 
-        // -(NSArray<Cell *> * _Nonnull)cellsForItemAt:(NSIndexPath * _Nonnull)indexPath __attribute__((diagnose_if(0x7fe0daeb6eb0, "Swift method 'SpreadsheetView.cellsForItem(at:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning"))) __attribute__((warn_unused_result));
+        // -(NSArray<ZMJCell *> *)cellsForItemAt:(NSIndexPath *)indexPath;
         [Export("cellsForItemAt:")]
-        Cell[] CellsForItemAt(NSIndexPath indexPath);
+        ZMJCell[] CellsForItemAt(NSIndexPath indexPath);
 
-        // -(CGRect)rectForItemAt:(NSIndexPath * _Nonnull)indexPath __attribute__((diagnose_if(0x7fe0daeb7190, "Swift method 'SpreadsheetView.rectForItem(at:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning"))) __attribute__((warn_unused_result));
+        // -(CGRect)rectForItemAt:(NSIndexPath *)indexPath;
         [Export("rectForItemAt:")]
         CGRect RectForItemAt(NSIndexPath indexPath);
+
+        // -(ZMJCellRange *)mergedCellFor:(Location *)indexPath;
+        [Export("mergedCellFor:")]
+        ZMJCellRange MergedCellFor(Location indexPath);
+
+        // @property (nonatomic, strong) NSMutableOrderedSet<NSIndexPath *> * highlightedIndexPaths;
+        [Export("highlightedIndexPaths", ArgumentSemantic.Strong)]
+        NSMutableOrderedSet<NSIndexPath> HighlightedIndexPaths { get; set; }
+
+        // @property (nonatomic, strong) NSMutableOrderedSet<NSIndexPath *> * selectedIndexPaths;
+        [Export("selectedIndexPaths", ArgumentSemantic.Strong)]
+        NSMutableOrderedSet<NSIndexPath> SelectedIndexPaths { get; set; }
+
+        // @property (nonatomic, strong) UITouch * currentTouch;
+        [Export("currentTouch", ArgumentSemantic.Strong)]
+        UITouch CurrentTouch { get; set; }
+
+        // @property (nonatomic, strong) ZMJScrollView * columnHeaderView;
+        [Export("columnHeaderView", ArgumentSemantic.Strong)]
+        ZMJScrollView ColumnHeaderView { get; set; }
+
+        // @property (nonatomic, strong) ZMJScrollView * rowHeaderView;
+        [Export("rowHeaderView", ArgumentSemantic.Strong)]
+        ZMJScrollView RowHeaderView { get; set; }
+
+        // @property (nonatomic, strong) ZMJScrollView * cornerView;
+        [Export("cornerView", ArgumentSemantic.Strong)]
+        ZMJScrollView CornerView { get; set; }
+
+        // @property (nonatomic, strong) ZMJScrollView * tableView;
+        [Export("tableView", ArgumentSemantic.Strong)]
+        ZMJScrollView TableView { get; set; }
+
+        // @property (nonatomic, strong) UIScrollView * overlayView;
+        [Export("overlayView", ArgumentSemantic.Strong)]
+        UIScrollView OverlayView { get; set; }
+
+        // @property (nonatomic, strong) UIScrollView * rootView;
+        [Export("rootView", ArgumentSemantic.Strong)]
+        UIScrollView RootView { get; set; }
+
+        // @property (nonatomic, strong) ZMJLayoutProperties * layoutProperties;
+        [Export("layoutProperties", ArgumentSemantic.Strong)]
+        ZMJLayoutProperties LayoutProperties { get; set; }
+
+        // @property (nonatomic, strong) NSIndexPath * pendingSelectionIndexPath;
+        [Export("pendingSelectionIndexPath", ArgumentSemantic.Strong)]
+        NSIndexPath PendingSelectionIndexPath { get; set; }
     }
 
-    // @interface SpreadsheetView_Swift_422 (SpreadsheetView)
-    [Category]
-    [BaseType(typeof(SpreadsheetView))]
-    interface SpreadsheetView_SpreadsheetView_UISnapshotting
-    {
-        // -(UIView * _Nullable)resizableSnapshotViewFromRect:(CGRect)rect afterScreenUpdates:(BOOL)afterUpdates withCapInsets:(UIEdgeInsets)capInsets __attribute__((warn_unused_result));
-        [Export("resizableSnapshotViewFromRect:afterScreenUpdates:withCapInsets:")]
-        [return: NullAllowed]
-        UIView ResizableSnapshotViewFromRect(CGRect rect, bool afterUpdates, UIEdgeInsets capInsets);
-    }
-
-    // @interface SpreadsheetView_Swift_427 (SpreadsheetView) <UIScrollViewDelegate>
+    // @interface ForCategory (SpreadsheetView) <UIScrollViewDelegate>
     [Protocol]
     [BaseType(typeof(SpreadsheetView))]
-    interface SpreadsheetView_SpreadsheetView_UIScrollViewDelegate : IUIScrollViewDelegate
+    interface SpreadsheetView_ForCategory : IUIScrollViewDelegate
     {
-        // -(void)scrollViewDidScroll:(UIScrollView * _Nonnull)scrollView;
-        [Export("scrollViewDidScroll:")]
-        void ScrollViewDidScroll(UIScrollView scrollView);
-
-        // -(void)scrollViewDidEndScrollingAnimation:(UIScrollView * _Nonnull)scrollView;
-        [Export("scrollViewDidEndScrollingAnimation:")]
-        void ScrollViewDidEndScrollingAnimation(UIScrollView scrollView);
-
-        // -(void)scrollViewDidChangeAdjustedContentInset:(UIScrollView * _Nonnull)scrollView __attribute__((availability(ios, introduced=11.0)));
-        [Introduced(PlatformName.iOS, 11, 0)]
-        [Export("scrollViewDidChangeAdjustedContentInset:")]
-        void ScrollViewDidChangeAdjustedContentInset(UIScrollView scrollView);
+        // -(void)reloadDataIfNeeded;
+        [Export("reloadDataIfNeeded")]
+        void ReloadDataIfNeeded();
     }
 
-    // @interface SpreadsheetView_Swift_434 (SpreadsheetView)
+    // @interface CirclularScrolling (SpreadsheetView)
     [Category]
     [BaseType(typeof(SpreadsheetView))]
-    interface SpreadsheetView_SpreadsheetView_UIViewHierarchy
+    interface SpreadsheetView_CirclularScrolling
     {
-        // -(void)insertSubview:(UIView * _Nonnull)view atIndex:(NSInteger)index;
-        [Export("insertSubview:atIndex:")]
-        void InsertSubview(UIView view, nint index);
-
-        // -(void)exchangeSubviewAtIndex:(NSInteger)index1 withSubviewAtIndex:(NSInteger)index2;
-        [Export("exchangeSubviewAtIndex:withSubviewAtIndex:")]
-        void ExchangeSubviewAtIndex(nint index1, nint index2);
-
-        // -(void)addSubview:(UIView * _Nonnull)view;
-        [Export("addSubview:")]
-        void AddSubview(UIView view);
-
-        // -(void)insertSubview:(UIView * _Nonnull)view belowSubview:(UIView * _Nonnull)siblingSubview;
-        [Export("insertSubview:belowSubview:")]
-        void InsertSubviewBelow(UIView view, UIView siblingSubview);
-
-        // -(void)insertSubview:(UIView * _Nonnull)view aboveSubview:(UIView * _Nonnull)siblingSubview;
-        [Export("insertSubview:aboveSubview:")]
-        void InsertSubviewAbove(UIView view, UIView siblingSubview);
-
-        // -(void)bringSubviewToFront:(UIView * _Nonnull)view;
-        [Export("bringSubviewToFront:")]
-        void BringSubviewToFront(UIView view);
-
-        // -(void)sendSubviewToBack:(UIView * _Nonnull)view;
-        [Export("sendSubviewToBack:")]
-        void SendSubviewToBack(UIView view);
-    }
-
-    // @interface SpreadsheetView_Swift_445 (SpreadsheetView)
-    [Category]
-    [BaseType(typeof(SpreadsheetView))]
-    interface SpreadsheetView_SpreadsheetView_CirclularScrolling
-    {
-        // -(void)scrollToHorizontalCenter __attribute__((diagnose_if(0x7fe0daeb8ad8, "Swift method 'SpreadsheetView.scrollToHorizontalCenter()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // -(void)scrollToHorizontalCenter;
         [Export("scrollToHorizontalCenter")]
         void ScrollToHorizontalCenter();
 
-        // -(void)scrollToVerticalCenter __attribute__((diagnose_if(0x7fe0daeb8cc0, "Swift method 'SpreadsheetView.scrollToVerticalCenter()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // -(void)scrollToVerticalCenter;
         [Export("scrollToVerticalCenter")]
         void ScrollToVerticalCenter();
 
-        // -(void)recenterHorizontallyIfNecessary __attribute__((diagnose_if(0x7fe0daeb8ea8, "Swift method 'SpreadsheetView.recenterHorizontallyIfNecessary()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // -(void)recenterHorizontallyIfNecessary;
         [Export("recenterHorizontallyIfNecessary")]
         void RecenterHorizontallyIfNecessary();
 
-        // -(void)recenterVerticallyIfNecessary __attribute__((diagnose_if(0x7fe0daeb9098, "Swift method 'SpreadsheetView.recenterVerticallyIfNecessary()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // -(void)recenterVerticallyIfNecessary;
         [Export("recenterVerticallyIfNecessary")]
         void RecenterVerticallyIfNecessary();
 
-        // -(NSInteger)determineHorizontalCircularScrollScalingFactor __attribute__((diagnose_if(0x7fe0daeb9288, "Swift method 'SpreadsheetView.determineHorizontalCircularScrollScalingFactor()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning"))) __attribute__((warn_unused_result));
+        // -(CircularScrollScalingFactor)determineCircularScrollScalingFactor;
+        [Export("determineCircularScrollScalingFactor")]
+        CircularScrollScalingFactor DetermineCircularScrollScalingFactor();
+
+        // -(NSInteger)determineHorizontalCircularScrollScalingFactor;
         [Export("determineHorizontalCircularScrollScalingFactor")]
         nint DetermineHorizontalCircularScrollScalingFactor();
 
-        // -(NSInteger)determineVerticalCircularScrollScalingFactor __attribute__((diagnose_if(0x7fe0daeb9498, "Swift method 'SpreadsheetView.determineVerticalCircularScrollScalingFactor()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning"))) __attribute__((warn_unused_result));
+        // -(NSInteger)determineVerticalCircularScrollScalingFactor;
         [Export("determineVerticalCircularScrollScalingFactor")]
         nint DetermineVerticalCircularScrollScalingFactor();
 
-        // -(CGPoint)calculateCenterOffset __attribute__((diagnose_if(0x7fe0daeb96a8, "Swift method 'SpreadsheetView.calculateCenterOffset()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning"))) __attribute__((warn_unused_result));
+        // -(CGPoint)calculateCenterOffset;
         [Export("calculateCenterOffset")]
         CGPoint CalculateCenterOffset();
     }
 
-    // @interface SpreadsheetView_Swift_456 (SpreadsheetView)
+    // @interface Layout (SpreadsheetView)
     [Category]
     [BaseType(typeof(SpreadsheetView))]
-    interface SpreadsheetView_SpreadsheetView_Swift_456
+    interface SpreadsheetView_Layout
     {
-        // -(void)touchesBegan:(NSSet<UITouch *> * _Nonnull)touches :(UIEvent * _Nullable)event __attribute__((diagnose_if(0x7fe0daeb98a0, "Swift method 'SpreadsheetView.touchesBegan(_:_:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("touchesBegan::")]
-        void TouchesBegan(NSSet<UITouch> touches, [NullAllowed] UIEvent @event);
+        // -(LayoutAttributes)layoutAttributeForCornerView;
+        [Export("layoutAttributeForCornerView")]
+        LayoutAttributes LayoutAttributeForCornerView();
 
-        // -(void)touchesEnded:(NSSet<UITouch *> * _Nonnull)touches :(UIEvent * _Nullable)event __attribute__((diagnose_if(0x7fe0daeb9bf0, "Swift method 'SpreadsheetView.touchesEnded(_:_:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("touchesEnded::")]
-        void TouchesEnded(NSSet<UITouch> touches, [NullAllowed] UIEvent @event);
+        // -(LayoutAttributes)layoutAttributeForColumnHeaderView;
+        [Export("layoutAttributeForColumnHeaderView")]
+        LayoutAttributes LayoutAttributeForColumnHeaderView();
 
-        // -(void)touchesCancelled:(NSSet<UITouch *> * _Nonnull)touches :(UIEvent * _Nullable)event __attribute__((diagnose_if(0x7fe0daeb9f40, "Swift method 'SpreadsheetView.touchesCancelled(_:_:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("touchesCancelled::")]
-        void TouchesCancelled(NSSet<UITouch> touches, [NullAllowed] UIEvent @event);
+        // -(LayoutAttributes)layoutAttributeForRowHeaderView;
+        [Export("layoutAttributeForRowHeaderView")]
+        LayoutAttributes LayoutAttributeForRowHeaderView();
 
-        // -(void)highlightItemsOn:(NSSet<UITouch *> * _Nonnull)touches __attribute__((diagnose_if(0x7fe0daeba298, "Swift method 'SpreadsheetView.highlightItems(on:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("highlightItemsOn:")]
-        void HighlightItemsOn(NSSet<UITouch> touches);
+        // -(LayoutAttributes)layoutAttributeForTableView;
+        [Export("layoutAttributeForTableView")]
+        LayoutAttributes LayoutAttributeForTableView();
+
+        // -(ZMJLayoutProperties *)resetLayoutProperties;
+        [Export("resetLayoutProperties")]
+        ZMJLayoutProperties ResetLayoutProperties();
+
+        // -(void)resetContentSize:(ZMJScrollView *)scrollView;
+        [Export("resetContentSize:")]
+        void ResetContentSize(ZMJScrollView scrollView);
+
+        // -(void)resetScrollViewFrame;
+        [Export("resetScrollViewFrame")]
+        void ResetScrollViewFrame();
+
+        // -(void)resetOverlayViewContentSize:(UIEdgeInsets)contentInset;
+        [Export("resetOverlayViewContentSize:")]
+        void ResetOverlayViewContentSize(UIEdgeInsets contentInset);
+
+        // -(void)resetScrollViewArrangement;
+        [Export("resetScrollViewArrangement")]
+        void ResetScrollViewArrangement();
+
+        // -(NSInteger)findIndex:(NSArray<NSNumber *> *)records offset:(CGFloat)offset;
+        [Export("findIndex:offset:")]
+        nint FindIndex(NSNumber[] records, nfloat offset);
+    }
+
+    // @interface Touches (SpreadsheetView)
+    [Category]
+    [BaseType(typeof(SpreadsheetView))]
+    interface SpreadsheetView_Touches
+    {
+        // -(void)touchesBegan:(NSSet<UITouch *> *)touches event:(UIEvent *)event;
+        [Export("touchesBegan:event:")]
+        void TouchesBegan(NSSet<UITouch> touches, UIEvent @event);
+
+        // -(void)touchesEnded:(NSSet<UITouch *> *)touches event:(UIEvent *)event;
+        [Export("touchesEnded:event:")]
+        void TouchesEnded(NSSet<UITouch> touches, UIEvent @event);
+
+        // -(void)touchesCancelled:(NSSet<UITouch *> *)touches event:(UIEvent *)event;
+        [Export("touchesCancelled:event:")]
+        void TouchesCancelled(NSSet<UITouch> touches, UIEvent @event);
 
         // -(void)restorePreviousSelection;
         [Export("restorePreviousSelection")]
@@ -516,140 +1525,121 @@ namespace Spreadsheet
         void ClearCurrentTouch();
     }
 
-    // @interface SpreadsheetView_Swift_466 (SpreadsheetView)
+    // @interface UIScrollView (SpreadsheetView)
     [Category]
     [BaseType(typeof(SpreadsheetView))]
-    interface SpreadsheetView_SpreadsheetView_Layout
+    interface SpreadsheetView_UIScrollView
     {
-        // -(void)layoutSubviews;
-        [Export("layoutSubviews")]
-        void LayoutSubviews();
+        // - (void)setContentOffset:(CGPoint)contentOffset
+        [Export("setContentOffset:")]
+        void SetContentOffset(CGPoint point);
 
-        // -(void)resetContentSizeOf:(ScrollView * _Nonnull)scrollView __attribute__((diagnose_if(0x7fe0daeba7d8, "Swift method 'SpreadsheetView.resetContentSize(of:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("resetContentSizeOf:")]
-        void ResetContentSizeOf(ScrollView scrollView);
-
-        // -(void)resetScrollViewFrame __attribute__((diagnose_if(0x7fe0daebaa58, "Swift method 'SpreadsheetView.resetScrollViewFrame()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("resetScrollViewFrame")]
-        void ResetScrollViewFrame();
-
-        // -(void)resetOverlayViewContentSize:(UIEdgeInsets)contentInset __attribute__((diagnose_if(0x7fe0daebac40, "Swift method 'SpreadsheetView.resetOverlayViewContentSize(_:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("resetOverlayViewContentSize:")]
-        void ResetOverlayViewContentSize(UIEdgeInsets contentInset);
-
-        // -(void)resetScrollViewArrangement __attribute__((diagnose_if(0x7fe0daebaea8, "Swift method 'SpreadsheetView.resetScrollViewArrangement()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("resetScrollViewArrangement")]
-        void ResetScrollViewArrangement();
-
-        // -(NSInteger)findIndexIn:(NSArray<NSNumber *> * _Nonnull)records for:(CGFloat)offset __attribute__((diagnose_if(0x7fe0daebb098, "Swift method 'SpreadsheetView.findIndex(in:for:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning"))) __attribute__((warn_unused_result));
-        [Export("findIndexIn:for:")]
-        nint FindIndexIn(NSNumber[] records, nfloat offset);
-    }
-
-    // @interface SpreadsheetView_Swift_476 (SpreadsheetView)
-    [Category]
-    [BaseType(typeof(SpreadsheetView))]
-    interface SpreadsheetView_SpreadsheetView_UIScrollView
-    {
-        // @property (nonatomic) CGPoint contentOffset __attribute__((diagnose_if(0x7fe0daebb428, "Swift property 'SpreadsheetView.contentOffset' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // - (CGPoint)contentOffset
         [Export("contentOffset")]
         CGPoint GetContentOffset();
 
-        [Export("contentOffset")]
-        void SetContentOffset(CGPoint point);
+        // - (void)setScrollIndicatorInsets:(UIEdgeInsets)scrollIndicatorInsets
+        [Export("setScrollIndicatorInsets:")]
+        void SetScrollIndicatorInsets(UIEdgeInsets edgeInsets);
 
-        // @property (nonatomic) UIEdgeInsets scrollIndicatorInsets __attribute__((diagnose_if(0x7fe0daebb780, "Swift property 'SpreadsheetView.scrollIndicatorInsets' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // - (UIEdgeInsets)scrollIndicatorInsets
         [Export("scrollIndicatorInsets")]
         UIEdgeInsets GetScrollIndicatorInsets();
 
-        [Export("scrollIndicatorInsets")]
-        void SetScrollIndicatorInsets(UIEdgeInsets edgeInsets);
-
-        // @property (readonly, nonatomic) CGSize contentSize __attribute__((diagnose_if(0x7fe0daebbae0, "Swift property 'SpreadsheetView.contentSize' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // - (CGSize)contentSize
         [Export("contentSize")]
-        CGSize ContentSize();
+        CGSize GetContentSize();
 
-        // @property (nonatomic) UIEdgeInsets contentInset __attribute__((diagnose_if(0x7fe0daebbd38, "Swift property 'SpreadsheetView.contentInset' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // - (void)setContentInset:(UIEdgeInsets)contentInset
+        [Export("setContentInset:")]
+        void SetContentInset(UIEdgeInsets edgeInsets);
+
+        // - (UIEdgeInsets)contentInset
         [Export("contentInset")]
         UIEdgeInsets GetContentInset();
 
-        [Export("contentInset")]
-        void SetContentInset(UIEdgeInsets edgeInsets);
+        // - (UIEdgeInsets)adjustedContentInset
+        [Introduced(PlatformName.iOS, 11, 0)]
+        [Export("adjustedContentInset", ArgumentSemantic.Assign)]
+        UIEdgeInsets GetAdjustedContentInset();
 
-        // @property (readonly, nonatomic) UIEdgeInsets adjustedContentInset __attribute__((availability(ios, introduced=11.0))) __attribute__((diagnose_if(0x7fe0daebc0f8, "Swift property 'SpreadsheetView.adjustedContentInset' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [iOS(11, 0)]
-        [Export("adjustedContentInset")]
-        UIEdgeInsets AdjustedContentInset();
-
-        // -(void)flashScrollIndicators __attribute__((diagnose_if(0x7fe0daebc408, "Swift method 'SpreadsheetView.flashScrollIndicators()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning"))) __attribute__((diagnose_if(0x7fe0daebc510, "Swift method 'SpreadsheetView.flashScrollIndicators()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // -(void)flashScrollIndicators;
         [Export("flashScrollIndicators")]
         void FlashScrollIndicators();
 
-        // -(void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated __attribute__((diagnose_if(0x7fe0daebc6f8, "Swift method 'SpreadsheetView.setContentOffset(_:animated:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning"))) __attribute__((diagnose_if(0x7fe0daebc808, "Swift method 'SpreadsheetView.setContentOffset(_:animated:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // -(void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated;
         [Export("setContentOffset:animated:")]
         void SetContentOffset(CGPoint contentOffset, bool animated);
 
-        // -(void)scrollRectToVisible:(CGRect)rect animated:(BOOL)animated __attribute__((diagnose_if(0x7fe0daebcaf0, "Swift method 'SpreadsheetView.scrollRectToVisible(_:animated:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning"))) __attribute__((diagnose_if(0x7fe0daebcc00, "Swift method 'SpreadsheetView.scrollRectToVisible(_:animated:)' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
+        // -(void)scrollRectToVisible:(CGRect)rect animated:(BOOL)animated;
         [Export("scrollRectToVisible:animated:")]
         void ScrollRectToVisible(CGRect rect, bool animated);
-
-        // -(void)_notifyDidScroll __attribute__((diagnose_if(0x7fe0daebcee8, "Swift method 'SpreadsheetView._notifyDidScroll()' uses '@objc' inference deprecated in Swift 4; add '@objc' to provide an Objective-C entrypoint", "warning")));
-        [Export("_notifyDidScroll")]
-        void _notifyDidScroll();
-
-        // -(BOOL)isKindOfClass:(Class _Nonnull)aClass __attribute__((warn_unused_result));
-        [Export("isKindOfClass:")]
-        bool IsKindOfClass(Class aClass);
-
-        // -(id _Nullable)forwardingTargetForSelector:(SEL _Null_unspecified)aSelector __attribute__((warn_unused_result));
-        [Export("forwardingTargetForSelector:")]
-        [return: NullAllowed]
-        NSObject ForwardingTargetForSelector(Selector aSelector);
     }
 
-
-    [Model]
-    [BaseType(typeof(NSObject))]
-    interface CellRange
+    // @interface UIScrollViewDelegate (SpreadsheetView) <UIScrollViewDelegate>
+    [Protocol]
+    [BaseType(typeof(SpreadsheetView))]
+    interface SpreadsheetView_UIScrollViewDelegate : IUIScrollViewDelegate
     {
-        [Export("contains:indexPath:")]
-        bool Contains(NSIndexPath indexPath);
     }
 
-    [Protocol, Model]
-    [BaseType(typeof(NSObject))]
-    interface SpreadsheetViewDataSource
+    // @interface UISnapshotting (SpreadsheetView)
+    [Category]
+    [BaseType(typeof(SpreadsheetView))]
+    interface SpreadsheetView_UISnapshotting
     {
-        [Abstract]
-        [Export("numberOfColumns:")]
-        nint NumberOfColumns(SpreadsheetView spreadsheetView);
-
-        [Abstract]
-        [Export("numberOfRows:")]
-        nint NumberOfRows(SpreadsheetView spreadsheetView);
-
-        [Abstract]
-        [Export("spreadsheetView:widthForColumn:")]
-        nfloat WidthForColumn(SpreadsheetView spreadsheetView, nint column);
-
-        [Abstract]
-        [Export("spreadsheetView:heightForRow:")]
-        nfloat HeightForRow(SpreadsheetView spreadsheetView, nint row);
-
-        [Abstract]
-        [Export("mergedCells:")]
-        CellRange[] MergedCells(SpreadsheetView spreadsheetView);
-
-        [Abstract]
-        [Export("frozenColumns:")]
-        nint FrozenColumns(SpreadsheetView spreadsheetView);
-
-        [Abstract]
-        [Export("frozenRows:")]
-        nint FrozenRows(SpreadsheetView spreadsheetView);
-
     }
 
-    interface ISpreadsheetViewDataSource { }
+    // @interface UIViewHierarchy (SpreadsheetView)
+    [Category]
+    [BaseType(typeof(SpreadsheetView))]
+    interface SpreadsheetView_UIViewHierarchy
+    {
+    }
 
+    // @interface ZMJCellRange : NSObject
+    [BaseType(typeof(NSObject))]
+    interface ZMJCellRange : INativeObject
+    {
+        // @property (readonly, nonatomic, strong) Location * from;
+        [Export("from", ArgumentSemantic.Strong)]
+        Location From { get; }
+
+        // @property (readonly, nonatomic, strong) Location * to;
+        [Export("to", ArgumentSemantic.Strong)]
+        Location To { get; }
+
+        // @property (readonly, assign, nonatomic) NSInteger columnCount;
+        [Export("columnCount")]
+        nint ColumnCount { get; }
+
+        // @property (readonly, assign, nonatomic) NSInteger rowCount;
+        [Export("rowCount")]
+        nint RowCount { get; }
+
+        // @property (assign, nonatomic) CGSize size;
+        [Export("size", ArgumentSemantic.Assign)]
+        CGSize Size { get; set; }
+
+        // +(instancetype)cellRangeFrom:(Location *)from to:(Location *)to;
+        [Static]
+        [Export("cellRangeFrom:to:")]
+        ZMJCellRange CellRangeFrom(Location from, Location to);
+
+        // -(instancetype)initFromRow:(NSInteger)fromRow fromColumn:(NSInteger)fromColumn toRow:(NSInteger)toRow toColumn:(NSInteger)toColumn;
+        [Export("initFromRow:fromColumn:toRow:toColumn:")]
+        IntPtr Constructor(nint fromRow, nint fromColumn, nint toRow, nint toColumn);
+
+        // -(instancetype)initFromIndex:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath;
+        [Export("initFromIndex:toIndexPath:")]
+        IntPtr Constructor(NSIndexPath fromIndexPath, NSIndexPath toIndexPath);
+
+        // -(BOOL)containsIndexPath:(NSIndexPath *)indexPath;
+        [Export("containsIndexPath:")]
+        bool ContainsIndexPath(NSIndexPath indexPath);
+
+        // -(BOOL)containsCellRange:(ZMJCellRange *)cellRange;
+        [Export("containsCellRange:")]
+        bool ContainsCellRange(ZMJCellRange cellRange);
+    }
 }

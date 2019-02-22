@@ -41,9 +41,9 @@
     <ObjcBindingCoreSource Include="Structs.cs" />
   </ItemGroup>
   <ItemGroup>
-    <NativeReference Include="..\..\..\sharpie\SpreadsheetView-binding\SpreadsheetView.framework">
+    <NativeReference Include="..\..\..\sharpie\Binding\ZMJGanttChart.framework">
       <Kind>Framework</Kind>
-      <ForceLoad>True</ForceLoad>
+      <SmartLink>False</SmartLink>
     </NativeReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.ObjCBinding.CSharp.targets" />
