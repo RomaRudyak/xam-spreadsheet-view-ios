@@ -9,7 +9,7 @@ using CoreGraphics;
 
 namespace Spreadsheet.Sample
 {
-    // https://github.com/kishikawakatsumi/SpreadsheetView/blob/72919594953b6daf5d050a342a6101318f78e77d/Examples/Timetable/Sources/ViewController.swift
+    // https://github.com/keshiim/ZMJGanttChart/blob/980aa1dd4078f6d44e1444da193ce7a74a7fcd37/Example/ZMJTimeable/ViewController.m
     public partial class ViewController : UIViewController, ISpreadsheetViewDataSource
     {
         private SpreadsheetView _spreadsheetView;
@@ -89,9 +89,6 @@ namespace Spreadsheet.Sample
 
         public nint FrozenRows(SpreadsheetView spreadsheetView) => 1;
 
-        public CellRange[] MergedCells(SpreadsheetView spreadsheetView)
-        {
-            return new CellRange[0];
-        }
+        public ZMJCell CellForItemAt(SpreadsheetView spreadsheetView, NSIndexPath indexPath) => new ZMJCell();
     }
 }
