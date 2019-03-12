@@ -160,7 +160,7 @@ namespace Spreadsheet
         // +(instancetype)instance;
         [Static]
         [Export("instance")]
-        Configuration Instance();
+        Configuration Instance { get; }
 
         // @property (nonatomic, strong) CircularScrollingConfigurationBuilder * none;
         [Export("none", ArgumentSemantic.Strong)]
@@ -873,7 +873,7 @@ namespace Spreadsheet
     }
 
     // @protocol SpreadsheetViewDataSource <NSObject>
-    [Protocol, Model]
+    [Protocol]
     [BaseType(typeof(NSObject))]
     interface SpreadsheetViewDataSource
     {
@@ -903,14 +903,17 @@ namespace Spreadsheet
         ZMJCell CellForItemAt(SpreadsheetView spreadsheetView, NSIndexPath indexPath);
 
         // @optional -(NSArray<ZMJCellRange *> *)mergedCells:(SpreadsheetView *)spreadsheetView;
+        [Abstract]
         [Export("mergedCells:")]
         ZMJCellRange[] MergedCells(SpreadsheetView spreadsheetView);
 
         // @optional -(NSInteger)frozenColumns:(SpreadsheetView *)spreadsheetView;
+        [Abstract]
         [Export("frozenColumns:")]
         nint FrozenColumns(SpreadsheetView spreadsheetView);
 
         // @optional -(NSInteger)frozenRows:(SpreadsheetView *)spreadsheetView;
+        [Abstract]
         [Export("frozenRows:")]
         nint FrozenRows(SpreadsheetView spreadsheetView);
     }
@@ -955,6 +958,9 @@ namespace Spreadsheet
     [BaseType(typeof(UIView))]
     interface ZMJCell : INativeObject
     {
+        [Export("initWithFrame:")]
+        IntPtr Constructor(CGRect frame);
+
         // @property (readonly, nonatomic, strong) UIView * contentView;
         [Export("contentView", ArgumentSemantic.Strong)]
         UIView ContentView { get; }
@@ -977,7 +983,7 @@ namespace Spreadsheet
 
         // @property (nonatomic, strong) Gridlines * gridlines;
         [Export("gridlines", ArgumentSemantic.Strong)]
-        Gridlines Gridlines { get; set; }
+        Gridlines GridLines { get; set; }
 
         // @property (nonatomic, strong) Gridlines * grids;
         [Export("grids", ArgumentSemantic.Strong)]
@@ -1016,6 +1022,8 @@ namespace Spreadsheet
     [BaseType(typeof(ZMJCell))]
     interface BlankCell
     {
+        [Export("initWithFrame:")]
+        IntPtr Constructor(CGRect frame);
     }
 
     // @interface ZMJScrollView : UIScrollView
@@ -1315,7 +1323,8 @@ namespace Spreadsheet
 
         // -(void)registerClass:(Class)cellClass forCellWithReuseIdentifier:(NSString *)identifier;
         [Export("registerClass:forCellWithReuseIdentifier:")]
-        void RegisterClass(Class cellClass, string identifier);
+        [Internal]
+        void RegisterClass(IntPtr cellClass, string identifier);
 
         // -(void)registerNib:(UINib *)cellNib forCellWithReuseIdentifier:(NSString *)identifier;
         [Export("registerNib:forCellWithReuseIdentifier:")]
