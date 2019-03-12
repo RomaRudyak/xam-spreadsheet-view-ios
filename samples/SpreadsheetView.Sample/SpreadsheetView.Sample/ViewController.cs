@@ -44,8 +44,11 @@ namespace Spreadsheet.Sample
 
             var hairline = 1 / UIScreen.MainScreen.Scale;
             _spreadsheetView.IntercellSpacing = new CGSize(width: hairline, height: hairline);
-            //_spreadsheetView.GridStyle = .solid(width: hairline, color: .lightGray);
-            //_spreadsheetView.CircularScrolling = CircularScrolling.Configuration.horizontally.rowHeaderStartsFirstColumn;
+            _spreadsheetView.GridStyle = GridStyle.Style(GridStyleType.solid, 1f, UIColor.Black);
+            ICircularScrollingConfiguration csb = CircularScrollingConfigurationBuilder
+                .ConfigurationBuilderWithCircularScrollingState(CircularScrollingConfigurationState.horizontally_rowHeaderStartsFirstColumn);
+
+            _spreadsheetView.CircularScrolling = csb;
 
 
             Add(_spreadsheetView);
@@ -82,7 +85,7 @@ namespace Spreadsheet.Sample
             {
                 return 44;
             }
-            return 2;
+            return 20;
         }
 
         public nint FrozenColumns(SpreadsheetView spreadsheetView) => 1;
