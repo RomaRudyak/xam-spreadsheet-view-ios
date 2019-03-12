@@ -121,7 +121,7 @@ namespace Spreadsheet
     }
 
     // @protocol CircularScrollingConfiguration
-    [Protocol, Model]
+    [Protocol]
     [BaseType(typeof(NSObject))]
     interface CircularScrollingConfiguration
     {
@@ -134,7 +134,7 @@ namespace Spreadsheet
     // @interface CircularScrollingConfigurationBuilder : NSObject <CircularScrollingConfiguration>
     [BaseType(typeof(NSObject))]
     [DisableDefaultCtor]
-    interface CircularScrollingConfigurationBuilder : ICircularScrollingConfiguration
+    interface CircularScrollingConfigurationBuilder : CircularScrollingConfiguration
     {
         // -(instancetype)initWithCircularScrollingState:(CircularScrollingConfigurationState)state;
         [Export("initWithCircularScrollingState:")]
@@ -815,6 +815,7 @@ namespace Spreadsheet
 
     // audit-objc-generics: @interface ReuseQueue<__covariant Reusable> : NSObject
     [BaseType(typeof(NSObject))]
+    [Model]
     interface ReuseQueue<T> : INativeObject where T : class, INativeObject
     {
         // -(void)enqueue:(Reusable)reusableObject;
@@ -1049,21 +1050,21 @@ namespace Spreadsheet
         [Export("state", ArgumentSemantic.Assign)]
         State State { get; set; }
 
-        // @property (nonatomic, strong) ReusableCollection<ZMJCell *> * visibleCells;
-        [Export("visibleCells", ArgumentSemantic.Strong)]
-        ReusableCollection<ZMJCell> VisibleCells { get; set; }
+        //// @property (nonatomic, strong) ReusableCollection<ZMJCell *> * visibleCells;
+        //[Export("visibleCells", ArgumentSemantic.Strong)]
+        //ReusableCollection<ZMJCell> VisibleCells { get; set; }
 
-        // @property (nonatomic, strong) ReusableCollection<Gridline *> * visibleVerticalGridlines;
-        [Export("visibleVerticalGridlines", ArgumentSemantic.Strong)]
-        ReusableCollection<Gridline> VisibleVerticalGridlines { get; set; }
+        //// @property (nonatomic, strong) ReusableCollection<Gridline *> * visibleVerticalGridlines;
+        //[Export("visibleVerticalGridlines", ArgumentSemantic.Strong)]
+        //ReusableCollection<Gridline> VisibleVerticalGridlines { get; set; }
 
-        // @property (nonatomic, strong) ReusableCollection<Gridline *> * visibleHorizontalGridlines;
-        [Export("visibleHorizontalGridlines", ArgumentSemantic.Strong)]
-        ReusableCollection<Gridline> VisibleHorizontalGridlines { get; set; }
+        //// @property (nonatomic, strong) ReusableCollection<Gridline *> * visibleHorizontalGridlines;
+        //[Export("visibleHorizontalGridlines", ArgumentSemantic.Strong)]
+        //ReusableCollection<Gridline> VisibleHorizontalGridlines { get; set; }
 
-        // @property (nonatomic, strong) ReusableCollection<Border *> * visibleBorders;
-        [Export("visibleBorders", ArgumentSemantic.Strong)]
-        ReusableCollection<Border> VisibleBorders { get; set; }
+        //// @property (nonatomic, strong) ReusableCollection<Border *> * visibleBorders;
+        //[Export("visibleBorders", ArgumentSemantic.Strong)]
+        //ReusableCollection<Border> VisibleBorders { get; set; }
 
         // @property (assign, nonatomic) BOOL hasDisplayedContent;
         [Export("hasDisplayedContent")]
@@ -1194,7 +1195,7 @@ namespace Spreadsheet
 
         // @property (nonatomic, strong) id<CircularScrollingConfiguration> circularScrolling;
         [Export("circularScrolling", ArgumentSemantic.Strong)]
-        CircularScrollingConfiguration CircularScrolling { get; set; }
+        ICircularScrollingConfiguration CircularScrolling { get; set; }
 
         // @property (nonatomic, strong) Options * circularScrollingOptions;
         [Export("circularScrollingOptions", ArgumentSemantic.Strong)]
@@ -1296,21 +1297,21 @@ namespace Spreadsheet
         [Export("scrollView", ArgumentSemantic.Assign)]
         UIScrollView ScrollView { get; }
 
-        // @property (nonatomic, strong) ReuseQueue<Gridline *> * horizontalGridlineReuseQueue;
-        [Export("horizontalGridlineReuseQueue", ArgumentSemantic.Strong)]
-        ReuseQueue<Gridline> HorizontalGridlineReuseQueue { get; set; }
+        //// @property (nonatomic, strong) ReuseQueue<Gridline *> * horizontalGridlineReuseQueue;
+        //[Export("horizontalGridlineReuseQueue", ArgumentSemantic.Strong)]
+        //ReuseQueue<Gridline> HorizontalGridlineReuseQueue { get; set; }
 
-        // @property (nonatomic, strong) ReuseQueue<Gridline *> * verticalGridlineReuseQueue;
-        [Export("verticalGridlineReuseQueue", ArgumentSemantic.Strong)]
-        ReuseQueue<Gridline> VerticalGridlineReuseQueue { get; set; }
+        //// @property (nonatomic, strong) ReuseQueue<Gridline *> * verticalGridlineReuseQueue;
+        //[Export("verticalGridlineReuseQueue", ArgumentSemantic.Strong)]
+        //ReuseQueue<Gridline> VerticalGridlineReuseQueue { get; set; }
 
-        // @property (nonatomic, strong) ReuseQueue<Border *> * borderReuseQueue;
-        [Export("borderReuseQueue", ArgumentSemantic.Strong)]
-        ReuseQueue<Border> BorderReuseQueue { get; set; }
+        //// @property (nonatomic, strong) ReuseQueue<Border *> * borderReuseQueue;
+        //[Export("borderReuseQueue", ArgumentSemantic.Strong)]
+        //ReuseQueue<Border> BorderReuseQueue { get; set; }
 
-        // @property (nonatomic, strong) NSMutableDictionary<NSString *,ReuseQueue<ZMJCell *> *> * cellReuseQueues;
-        [Export("cellReuseQueues", ArgumentSemantic.Strong)]
-        NSMutableDictionary<NSString, ReuseQueue<ZMJCell>> CellReuseQueues { get; set; }
+        //// @property (nonatomic, strong) NSMutableDictionary<NSString *,ReuseQueue<ZMJCell *> *> * cellReuseQueues;
+        //[Export("cellReuseQueues", ArgumentSemantic.Strong)]
+        //NSMutableDictionary<NSString, ReuseQueue<ZMJCell>> CellReuseQueues { get; set; }
 
         // -(void)registerClass:(Class)cellClass forCellWithReuseIdentifier:(NSString *)identifier;
         [Export("registerClass:forCellWithReuseIdentifier:")]
