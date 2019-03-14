@@ -4,6 +4,7 @@ Full configurable spreadsheet view user interfaces for iOS applications. With th
 
 ## Native lib project
 
-[SpreadsheetView GitHub](https://github.com/kishikawakatsumi/SpreadsheetView)
+
+[ZMJGanttChart GitHub](https://github.com/keshiim/ZMJGanttChart)
 
 > __N.B.__ Binding build only for iPhone builds. On Simulator it will fails to build.
