@@ -94,7 +94,7 @@ namespace Spreadsheet
         // +(instancetype)borderStyleNone;
         [Static]
         [Export("borderStyleNone")]
-        BorderStyle BorderStyleNone();
+        BorderStyle BorderStyleNone { get; }
 
         // @property (assign, nonatomic) BOOL hasBorders;
         [Export("hasBorders")]
@@ -265,7 +265,7 @@ namespace Spreadsheet
         // +(instancetype)borderStyleNone;
         [Static]
         [Export("borderStyleNone")]
-        GridStyle BorderStyleNone();
+        GridStyle BorderStyleNone { get; }
 
         // +(instancetype)style:(GridStyle_Enum)style_enum width:(CGFloat)widith color:(UIColor *)color;
         [Static]
@@ -954,6 +954,8 @@ namespace Spreadsheet
         void DidDeselectItemAt(SpreadsheetView spreadsheetView, NSIndexPath indexPath);
     }
 
+    interface ISpreadsheetViewDelegate { }
+
     // @interface ZMJCell : UIView
     [BaseType(typeof(UIView))]
     interface ZMJCell : INativeObject
@@ -1167,7 +1169,7 @@ namespace Spreadsheet
         ISpreadsheetViewDataSource DataSource { get; set; }
 
         [Wrap("WeakDelegate")]
-        SpreadsheetViewDelegate Delegate { get; set; }
+        ISpreadsheetViewDelegate Delegate { get; set; }
 
         // @property (nonatomic, weak) id<SpreadsheetViewDelegate> delegate;
         [NullAllowed, Export("delegate", ArgumentSemantic.Weak)]
