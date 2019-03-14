@@ -20,8 +20,8 @@ namespace Spreadsheet.Sample
             "SU", "CCC", "Game", "Anime", "Tokyo NX", "NYC", "SAN", "Drama", "Hobby", "Music"
         };
 
-        private readonly int numberOfRows = 24 * 60 + 1;
-        private List<NSIndexPath> slotInfo = new List<NSIndexPath>();
+        private readonly int _numberOfRows = 24 * 60 + 1;
+        private Dictionary<NSIndexPath, (int minutes, int duration)> _slotInfo = new Dictionary<NSIndexPath, (int minutes, int duration)>();
 
         //    private DateFormatter hourFormatter = DateFormatter()
         //let twelveHourFormatter = DateFormatter()
@@ -46,7 +46,7 @@ namespace Spreadsheet.Sample
 
             _spreadsheetView.RegisterClassForCellReuse(typeof(HourCell), new NSString(nameof(HourCell)));
             _spreadsheetView.RegisterClassForCellReuse(typeof(ChannelCell), new NSString(nameof(ChannelCell)));
-            _spreadsheetView.RegisterClassForCellReuse(typeof(SlotCell), new NSString(nameof(SlotCell)));
+            _spreadsheetView.RegisterNib(SlotCell.Nib, new NSString(SlotCell.Key));
             _spreadsheetView.RegisterClassForCellReuse(typeof(MyBlankCell), new NSString(nameof(MyBlankCell)));
 
 
@@ -76,7 +76,7 @@ namespace Spreadsheet.Sample
 
         public nint NumberOfColumns(SpreadsheetView spreadsheetView) => _channels.Length + 1;
 
-        public nint NumberOfRows(SpreadsheetView spreadsheetView) => numberOfRows;
+        public nint NumberOfRows(SpreadsheetView spreadsheetView) => _numberOfRows;
 
         public nfloat WidthForColumn(SpreadsheetView spreadsheetView, nint column)
         {
@@ -109,7 +109,7 @@ namespace Spreadsheet.Sample
 
             if (indexPath.GetColumn() == 0 && indexPath.Row > 0)
             {
-                HourCell cell = (HourCell)spreadsheetView.DequeueReusableCellWithReuseIdentifier(new NSString(nameof(HourCell)), indexPath);
+                HourCell cell = (HourCell)spreadsheetView.DequeueReusableCellWithReuseIdentifier(nameof(HourCell), indexPath);
                 cell.Label.Text = (indexPath.Row / 60 % 24).ToString();
                 cell.GridLines.Top = GridStyle.Style(GridStyleType.solid, 1, UIColor.White);
                 cell.GridLines.Bottom = GridStyle.Style(GridStyleType.solid, 1, UIColor.White);
@@ -118,7 +118,7 @@ namespace Spreadsheet.Sample
 
             if (indexPath.GetColumn() > 0 && indexPath.Row == 0)
             {
-                ChannelCell cell = (ChannelCell)spreadsheetView.DequeueReusableCellWithReuseIdentifier(new NSString(nameof(ChannelCell)), indexPath);
+                ChannelCell cell = (ChannelCell)spreadsheetView.DequeueReusableCellWithReuseIdentifier(nameof(ChannelCell), indexPath);
                 cell.Label.Text = _channels[indexPath.GetColumn() - 1];
                 cell.GridLines.Top = GridStyle.Style(GridStyleType.solid, 1, UIColor.Black);
                 cell.GridLines.Bottom = GridStyle.Style(GridStyleType.solid, 1, UIColor.White);
@@ -127,13 +127,61 @@ namespace Spreadsheet.Sample
                 return cell;
             }
 
+            if (_slotInfo.ContainsKey(indexPath))
+            {
+                (int minutes, int duration) = _slotInfo[indexPath];
+                SlotCell cell = (SlotCell)spreadsheetView.DequeueReusableCellWithReuseIdentifier(SlotCell.Key, indexPath);
+                cell.Minutes = (int)minutes % 60;
+                cell.Title = "Dummy Text";
+                cell.TableHighlight = duration > 20 ? "Lorem ipsum dolor sit amet, consectetur adipiscing elit" : "";
+                return cell;
+            }
 
-            return spreadsheetView.DequeueReusableCellWithReuseIdentifier(new NSString(nameof(MyBlankCell)), indexPath);
+
+            return spreadsheetView.DequeueReusableCellWithReuseIdentifier(nameof(MyBlankCell), indexPath);
         }
 
         public ZMJCellRange[] MergedCells(SpreadsheetView spreadsheetView)
         {
-            return new ZMJCellRange[0];
+            List<ZMJCellRange> mergedCells = new List<ZMJCellRange>();
+
+            for (int row = 0; row < 24; row++)
+            {
+                mergedCells.Add(
+                    ZMJCellRange.CellRangeFrom(
+                    from: new Location(60 * row + 1, 0),
+                    to: new Location(60 * (row + 1), 0)));
+            }
+            var seeds = new int[] { 5, 10, 20, 20, 30, 30, 30, 30, 40, 40, 50, 50, 60, 60, 60, 60, 90, 90, 90, 90, 120, 120, 120 };
+
+            var random = new Random();
+            for (var index = 0; index < _channels.Length; index++)
+            {
+                var channel = _channels[index];
+                int minutes = 0;
+                while (minutes < 24 * 60)
+                {
+                    int duration = seeds[random.Next(seeds.Length)];
+                    if (minutes + duration + 1 >= _numberOfRows)
+                    {
+                        mergedCells.Add(
+                            ZMJCellRange.CellRangeFrom(
+                                from: new Location(minutes + 1, column: index + 1),
+                                to: new Location(_numberOfRows - 1, column: index + 1)));
+                        break;
+                    }
+                    ZMJCellRange cellRange = ZMJCellRange.CellRangeFrom(
+                        from: new Location(minutes + 1, column: index + 1),
+                        to: new Location(minutes + duration + 1, column: index + 1));
+                    mergedCells.Add(cellRange);
+                    _slotInfo.Add(
+                        NSIndexPath.FromRowSection(cellRange.From.Row, cellRange.From.Column),
+                        (minutes, duration));
+                    minutes += duration + 1;
+                }
+            }
+
+            return mergedCells.ToArray();
         }
     }
 }

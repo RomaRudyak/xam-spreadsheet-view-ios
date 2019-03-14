@@ -94,6 +94,7 @@
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
     <InterfaceDefinition Include="Main.storyboard" />
+    <InterfaceDefinition Include="SlotCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -107,6 +108,10 @@
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="Cells.cs" />
+    <Compile Include="SlotCell.cs" />
+    <Compile Include="SlotCell.designer.cs">
+      <DependentUpon>SlotCell.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\SpreadsheetView\SpreadsheetView\SpreadsheetView.csproj">

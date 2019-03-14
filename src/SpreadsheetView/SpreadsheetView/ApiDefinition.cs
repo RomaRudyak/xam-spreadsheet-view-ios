@@ -801,7 +801,7 @@ namespace Spreadsheet
     // @interface column (NSIndexPath)
     [Category]
     [BaseType(typeof(NSIndexPath))]
-    interface NSIndexPath_column
+    interface NSIndexPathExtensions
     {
         // @property (assign, nonatomic) NSInteger column;
         [Export("column")]

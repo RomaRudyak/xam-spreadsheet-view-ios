@@ -5,7 +5,7 @@ using CoreGraphics;
 
 namespace SpreadsheetView.Sample
 {
-    abstract class CellBase : ZMJCell
+    public abstract class CellBase : ZMJCell
     {
         private Boolean _disposed;
         private UILabel _label;
@@ -80,20 +80,6 @@ namespace SpreadsheetView.Sample
                 Label.Text = _channel;
             }
         }
-    }
-
-    class SlotCell : CellBase
-    {
-        public SlotCell(IntPtr handle)
-            : base(
-                handle,
-                UIColor.DarkGray,
-                UIColor.LightTextColor.ColorWithAlpha(.7f),
-                15)
-        {
-        }
-
-
     }
 
     class MyBlankCell : BlankCell
