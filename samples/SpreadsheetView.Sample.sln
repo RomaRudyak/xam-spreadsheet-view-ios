@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZMJTimeable", "ZMJTimeable\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZMJSchedule", "ZMJSchedule\ZMJSchedule.csproj", "{BD566F4B-8FF0-4D7C-AD74-F7E5759E6D28}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZMJClassData", "ZMJClassData\ZMJClassData.csproj", "{1F2BC821-A17F-4D9F-B848-0108207F70E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|iPhoneSimulator = Debug|iPhoneSimulator
@@ -39,5 +41,13 @@ Global
 		{BD566F4B-8FF0-4D7C-AD74-F7E5759E6D28}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 		{BD566F4B-8FF0-4D7C-AD74-F7E5759E6D28}.Debug|iPhone.ActiveCfg = Debug|iPhone
 		{BD566F4B-8FF0-4D7C-AD74-F7E5759E6D28}.Debug|iPhone.Build.0 = Debug|iPhone
+		{1F2BC821-A17F-4D9F-B848-0108207F70E0}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{1F2BC821-A17F-4D9F-B848-0108207F70E0}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{1F2BC821-A17F-4D9F-B848-0108207F70E0}.Release|iPhone.ActiveCfg = Release|iPhone
+		{1F2BC821-A17F-4D9F-B848-0108207F70E0}.Release|iPhone.Build.0 = Release|iPhone
+		{1F2BC821-A17F-4D9F-B848-0108207F70E0}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{1F2BC821-A17F-4D9F-B848-0108207F70E0}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{1F2BC821-A17F-4D9F-B848-0108207F70E0}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{1F2BC821-A17F-4D9F-B848-0108207F70E0}.Debug|iPhone.Build.0 = Debug|iPhone
 	EndGlobalSection
 EndGlobal
