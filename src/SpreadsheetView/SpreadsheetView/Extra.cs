@@ -16,4 +16,9 @@ namespace Spreadsheet
         }
 
     }
+
+    public partial class ZMJCellRange
+    {
+        public static Spreadsheet.ZMJCellRange[] None { get; } = new Spreadsheet.ZMJCellRange[0];
+    }
 }

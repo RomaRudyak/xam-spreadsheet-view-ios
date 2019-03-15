@@ -138,10 +138,7 @@ namespace ZMJSchedule
             return 120f;
         }
 
-        ZMJCellRange[] ISpreadsheetViewDataSource.MergedCells(SpreadsheetView spreadsheetView)
-        {
-            return new ZMJCellRange[0];
-        }
+        ZMJCellRange[] ISpreadsheetViewDataSource.MergedCells(SpreadsheetView spreadsheetView) => ZMJCellRange.None;
 
         nint ISpreadsheetViewDataSource.NumberOfColumns(SpreadsheetView spreadsheetView)
         {
