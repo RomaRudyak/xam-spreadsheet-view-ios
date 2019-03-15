@@ -44,7 +44,7 @@ namespace ZMJSchedule
 
     public class DateCell : CellBase
     {
-        public DateCell(IntPtr handle, nfloat fontSize)
+        public DateCell(IntPtr handle)
             : base(handle, 10f)
         {
         }
@@ -52,7 +52,7 @@ namespace ZMJSchedule
 
     public class DayTitleCell : CellBase
     {
-        public DayTitleCell(IntPtr handle, nfloat fontSize)
+        public DayTitleCell(IntPtr handle)
             : base(handle, 12f)
         {
         }
@@ -60,7 +60,7 @@ namespace ZMJSchedule
 
     public class TimeTitleCell : CellBase
     {
-        public TimeTitleCell(IntPtr handle, nfloat fontSize)
+        public TimeTitleCell(IntPtr handle)
             : base(handle, 12f)
         {
         }
@@ -68,7 +68,7 @@ namespace ZMJSchedule
 
     public class TimeCell : CellBase
     {
-        public TimeCell(IntPtr handle, nfloat fontSize)
+        public TimeCell(IntPtr handle)
             : base(handle, 12f)
         {
         }
@@ -87,7 +87,7 @@ namespace ZMJSchedule
     {
         private UIColor _color;
 
-        public ScheduleCell(IntPtr handle, nfloat fontSize)
+        public ScheduleCell(IntPtr handle)
             : base(handle, 12f)
         {
         }
@@ -107,7 +107,7 @@ namespace ZMJSchedule
             set
             {
                 _color = value;
-                BackgroundView.BackgroundColor = _color;
+                BackgroundColor = _color;
             }
         }
     }
