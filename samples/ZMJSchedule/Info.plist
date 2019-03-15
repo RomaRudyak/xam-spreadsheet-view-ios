@@ -5,7 +5,7 @@
 	<key>CFBundleName</key>
 	<string>ZMJSchedule</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.roru.ZMJSchedule</string>
+	<string>com.roru.SpreadsheetView-Sample</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
