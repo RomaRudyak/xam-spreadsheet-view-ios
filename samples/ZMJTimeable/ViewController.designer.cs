@@ -8,7 +8,7 @@ using Foundation;
 using System;
 using System.CodeDom.Compiler;
 
-namespace Spreadsheet.Sample
+namespace ZMJTimeable
 {
     [Register ("ViewController")]
     partial class ViewController

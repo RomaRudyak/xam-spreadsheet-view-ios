@@ -2,13 +2,13 @@
 
 using UIKit;
 
-using Spreadsheet;
+
 using Foundation;
 using System.Collections.Generic;
 using CoreGraphics;
-using SpreadsheetView.Sample;
+using Spreadsheet;
 
-namespace Spreadsheet.Sample
+namespace ZMJTimeable
 {
     // https://github.com/keshiim/ZMJGanttChart/blob/980aa1dd4078f6d44e1444da193ce7a74a7fcd37/Example/ZMJTimeable/ViewController.m
     public partial class ViewController : UIViewController, ISpreadsheetViewDataSource
@@ -52,11 +52,11 @@ namespace Spreadsheet.Sample
 
             var hairline = 1 / UIScreen.MainScreen.Scale;
             _spreadsheetView.IntercellSpacing = new CGSize(width: hairline, height: hairline);
-            _spreadsheetView.GridStyle = GridStyle.Style(GridStyleType.solid, 1f, UIColor.Black);
-            //ICircularScrollingConfiguration csb = CircularScrollingConfigurationBuilder
-            //    .ConfigurationBuilderWithCircularScrollingState(CircularScrollingConfigurationState.horizontally_rowHeaderStartsFirstColumn);
+            _spreadsheetView.GridStyle = GridStyle.Style(GridStyleType.Solid, 1f, UIColor.Black);
+            ICircularScrollingConfiguration csb = CircularScrollingConfigurationBuilder
+                .ConfigurationBuilderWithCircularScrollingState(CircularScrollingConfigurationState.HorizontallyRowHeaderStartsFirstColumn);
 
-            // _spreadsheetView.CircularScrolling = Configuration.Instance.Horizontally;
+             _spreadsheetView.CircularScrolling = Configuration.Instance.Horizontally;
 
 
             Add(_spreadsheetView);
@@ -111,8 +111,8 @@ namespace Spreadsheet.Sample
             {
                 HourCell cell = (HourCell)spreadsheetView.DequeueReusableCellWithReuseIdentifier(nameof(HourCell), indexPath);
                 cell.Label.Text = (indexPath.Row / 60 % 24).ToString();
-                cell.GridLines.Top = GridStyle.Style(GridStyleType.solid, 1, UIColor.White);
-                cell.GridLines.Bottom = GridStyle.Style(GridStyleType.solid, 1, UIColor.White);
+                cell.GridLines.Top = GridStyle.Style(GridStyleType.Solid, 1, UIColor.White);
+                cell.GridLines.Bottom = GridStyle.Style(GridStyleType.Solid, 1, UIColor.White);
                 return cell;
             }
 
@@ -120,9 +120,9 @@ namespace Spreadsheet.Sample
             {
                 ChannelCell cell = (ChannelCell)spreadsheetView.DequeueReusableCellWithReuseIdentifier(nameof(ChannelCell), indexPath);
                 cell.Label.Text = _channels[indexPath.GetColumn() - 1];
-                cell.GridLines.Top = GridStyle.Style(GridStyleType.solid, 1, UIColor.Black);
-                cell.GridLines.Bottom = GridStyle.Style(GridStyleType.solid, 1, UIColor.White);
-                cell.GridLines.Left = GridStyle.Style(GridStyleType.solid, 1 / UIScreen.MainScreen.Scale, new UIColor(.3f, 1));
+                cell.GridLines.Top = GridStyle.Style(GridStyleType.Solid, 1, UIColor.Black);
+                cell.GridLines.Bottom = GridStyle.Style(GridStyleType.Solid, 1, UIColor.White);
+                cell.GridLines.Left = GridStyle.Style(GridStyleType.Solid, 1 / UIScreen.MainScreen.Scale, new UIColor(.3f, 1));
                 cell.GridLines.Right = cell.GridLines.Left;
                 return cell;
             }

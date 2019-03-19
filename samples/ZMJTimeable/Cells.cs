@@ -3,7 +3,7 @@ using Spreadsheet;
 using UIKit;
 using CoreGraphics;
 
-namespace SpreadsheetView.Sample
+namespace ZMJTimeable
 {
     public abstract class CellBase : ZMJCell
     {

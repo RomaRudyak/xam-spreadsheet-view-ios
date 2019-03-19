@@ -6,7 +6,7 @@
     <ProjectGuid>{384B2D9D-873F-4ADA-BA4F-8FC188B8BC47}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
-    <RootNamespace>SpreadsheetView.Sample</RootNamespace>
+    <RootNamespace>ZMJTimeable</RootNamespace>
     <AssemblyName>SpreadsheetView.Sample</AssemblyName>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
   </PropertyGroup>
@@ -114,7 +114,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\SpreadsheetView\SpreadsheetView\SpreadsheetView.csproj">
+    <ProjectReference Include="..\..\src\SpreadsheetView\SpreadsheetView\SpreadsheetView.csproj">
       <Project>{12F65E3D-572F-4F8D-BC14-DB89ED986B55}</Project>
       <Name>SpreadsheetView</Name>
     </ProjectReference>

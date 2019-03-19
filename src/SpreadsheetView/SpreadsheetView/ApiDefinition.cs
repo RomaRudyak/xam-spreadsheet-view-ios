@@ -101,16 +101,6 @@ namespace Spreadsheet
         bool HasBorders { get; set; }
     }
 
-    //// @interface  (Borders)
-    //[Category]
-    //[BaseType(typeof(Borders))]
-    //interface BordersExtensions
-    //{
-    //    // @property (assign, nonatomic) BOOL hasBorders;
-    //    [Export("hasBorders")]
-    //    bool HasBorders { get; set; }
-    //}
-
     // @interface Border : UIView
     [BaseType(typeof(UIView))]
     interface Border : INativeObject
@@ -1060,9 +1050,9 @@ namespace Spreadsheet
         [Export("state", ArgumentSemantic.Assign)]
         State State { get; set; }
 
-        //// @property (nonatomic, strong) ReusableCollection<ZMJCell *> * visibleCells;
-        //[Export("visibleCells", ArgumentSemantic.Strong)]
-        //ReusableCollection<ZMJCell> VisibleCells { get; set; }
+        // @property (nonatomic, strong) ReusableCollection<ZMJCell *> * visibleCells;
+        [Export("visibleCells", ArgumentSemantic.Strong)]
+        ZMJCell[] VisibleCells { get; set; }
 
         //// @property (nonatomic, strong) ReusableCollection<Gridline *> * visibleVerticalGridlines;
         //[Export("visibleVerticalGridlines", ArgumentSemantic.Strong)]
@@ -1072,7 +1062,7 @@ namespace Spreadsheet
         //[Export("visibleHorizontalGridlines", ArgumentSemantic.Strong)]
         //ReusableCollection<Gridline> VisibleHorizontalGridlines { get; set; }
 
-        //// @property (nonatomic, strong) ReusableCollection<Border *> * visibleBorders;
+        // @property (nonatomic, strong) ReusableCollection<Border *> * visibleBorders;
         //[Export("visibleBorders", ArgumentSemantic.Strong)]
         //ReusableCollection<Border> VisibleBorders { get; set; }
 

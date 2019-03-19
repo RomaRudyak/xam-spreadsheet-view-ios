@@ -1,6 +1,6 @@
 ﻿using UIKit;
 
-namespace Spreadsheet.Sample
+namespace ZMJTimeable
 {
     public class Application
     {

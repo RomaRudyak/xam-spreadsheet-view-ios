@@ -94,8 +94,8 @@ namespace ZMJSchedule
                     UIColor color = _dayColors[column - 1];
                     cell.Label.TextColor = color;
                     cell.Color = color.ColorWithAlpha(0.2f);
-                    cell.Borders.Top = new BorderStyle(BorderStyleType.solid, 2f, color);
-                    cell.Borders.Bottom = new BorderStyle(BorderStyleType.solid, 2f, color);
+                    cell.Borders.Top = new BorderStyle(BorderStyleType.Solid, 2f, color);
+                    cell.Borders.Bottom = new BorderStyle(BorderStyleType.Solid, 2f, color);
                 }
                 else
                 {

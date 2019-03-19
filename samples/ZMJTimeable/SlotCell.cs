@@ -3,7 +3,7 @@ using System;
 using UIKit;
 using Spreadsheet;
 
-namespace SpreadsheetView.Sample
+namespace ZMJTimeable
 {
     public partial class SlotCell : ZMJCell
     {

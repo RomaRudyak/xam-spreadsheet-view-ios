@@ -8,7 +8,7 @@ using Foundation;
 using System;
 using System.CodeDom.Compiler;
 
-namespace SpreadsheetView.Sample
+namespace ZMJTimeable
 {
     [Register ("SlotCell")]
     partial class SlotCell
