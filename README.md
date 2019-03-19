@@ -31,4 +31,5 @@ Full configurable spreadsheet view user interfaces for iOS applications. With th
 
 - Add Collection wrapper for ReusableCollection
 - Add Collection wrapper for ReusableQueue
-- Include simulator arch slice for building on simulators 
+- Include simulator arch slice for building on simulators
+- Create Nuget package
